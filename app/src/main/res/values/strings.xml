@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AppSSD</string>
+
+    <string name="nombre">Nombre</string>
+    <string name="error_vacio_edit_text">Esta vacío</string>
+    <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
+    <string name="autentificacion_error">No se a confirmado el correo. Favor de confirmar…</string>
+    <!--<string name="nombre">Nombre</string>-->
+    <!--<string name="nombre">Nombre</string>-->
+    <string name="inicio">Inicio</string>
+    <string name="se_me_olvido_contraseña">Se me olvido la contraseña</string>
+</resources>
