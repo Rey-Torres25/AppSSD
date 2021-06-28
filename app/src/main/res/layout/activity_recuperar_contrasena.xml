@@ -4,6 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".Recuperar_contrasena">
+
+
+    <TextView
+        android:id="@+id/AppSSD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="187dp"
+        android:layout_marginBottom="360dp"
+        android:text="Recupera tu contraseña"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnRegisterScreen"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_button_red"
+        android:backgroundTint="@color/pass_button"
+        android:onClick="registerUser"
+        android:text="Registrarse"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AppSSD" />
+
+    <View
+        android:id="@+id/divisor2"
+        android:layout_width="150dp"
+        android:layout_height="1dp"
+        android:background="@color/border_grey"
+        app:layout_constraintBottom_toBottomOf="@id/btnSignIn"
+        app:layout_constraintEnd_toEndOf="@id/btnSignIn"
+        app:layout_constraintLeft_toRightOf="@id/o"
+        app:layout_constraintTop_toTopOf="@id/btnRegisterScreen"
+        app:layout_constraintVertical_bias="0.065" />
+
+
+
+
+
+
+
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="600dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_input"
+        android:ems="10"
+        android:hint="Correo electrónico"
+        android:inputType="textEmailAddress"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/color"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

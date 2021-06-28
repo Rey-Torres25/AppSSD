@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextPassword;
     private Button bLogin;
     private User user;
+    TextView forgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);
         bLogin = findViewById(R.id.btnSignIn);
+        forgotPassword = findViewById(R.id.se_me_olvido_contraseña);
+
 
         bLogin.setClickable(false);
         mEditTextEmail.addTextChangedListener(new TextWatcher() {
@@ -61,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
                     bLogin.setTextColor(Color.parseColor("#666666"));
                     bLogin.setClickable(false);
                 }
+            }
+        });
+
+        //Recuperar contraseña
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Recuperar_contrasena.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -133,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     public void registerUser(View view){
         //Esto sirve para ingresar a la actividad RegistroUsuario
         Intent registro = new Intent(MainActivity.this, RegistroUsuario.class);
