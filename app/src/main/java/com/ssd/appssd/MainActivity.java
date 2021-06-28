@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
     public void registerUser(View view){
         //Esto sirve para ingresar a la actividad RegistroUsuario
         Intent registro = new Intent(MainActivity.this, RegistroUsuario.class);
