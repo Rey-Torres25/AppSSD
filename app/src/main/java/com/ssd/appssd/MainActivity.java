@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     //atributos de tipo privado
     private EditText mEditTextEmail;
     private EditText mEditTextPassword;
-
+    private Button bLogin;
     private User user;
 
     @Override
@@ -33,10 +36,60 @@ public class MainActivity extends AppCompatActivity {
 
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);
+        bLogin = findViewById(R.id.btnSignIn);
 
+        bLogin.setClickable(false);
+        mEditTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!mEditTextPassword.getText().toString().isEmpty()){
+                    bLogin.setBackgroundColor(Color.parseColor("#156c9e"));
+                    bLogin.setTextColor(Color.parseColor("#FFFFFF"));
+                    bLogin.setClickable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(mEditTextEmail.getText().toString().isEmpty()){
+                    bLogin.setBackgroundColor(Color.parseColor("#093d56"));
+                    bLogin.setTextColor(Color.parseColor("#666666"));
+                    bLogin.setClickable(false);
+                }
+            }
+        });
+
+        mEditTextPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!mEditTextEmail.getText().toString().isEmpty()) {
+                bLogin.setBackgroundColor(Color.parseColor("#156c9e"));
+                bLogin.setTextColor(Color.parseColor("#FFFFFF"));
+                bLogin.setClickable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(mEditTextPassword.getText().toString().isEmpty()){
+                    bLogin.setBackgroundColor(Color.parseColor("#093d56"));
+                    bLogin.setTextColor(Color.parseColor("#666666"));
+                    bLogin.setClickable(false);
+                }
+            }
+        });
     }
+
 
     public void iniciarSesion(View v) {
         //Esto sirve para ingresar a la actividad iniciarSesion

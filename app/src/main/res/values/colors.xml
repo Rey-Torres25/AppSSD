@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="color">#666666</color>
+    <color name="grey">#0d0e0e</color>
+    <color name="border_grey">#282929</color>
+    <color name="password">#156c9e</color>
+    <color name="button_blue">#093d56</color>
+    <color name="pass_button">#9e1515</color>
+    <color name="button_red">#560909</color>
 </resources>

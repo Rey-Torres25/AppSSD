@@ -3,6 +3,7 @@
 
     <string name="nombre">Nombre</string>
     <string name="error_vacio_edit_text">Esta vacío</string>
+    <string name="no_coinciden">Las contraseñas no coinciden</string>
     <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
     <string name="autentificacion_error">No se a confirmado el correo. Favor de confirmar…</string>
     <!--<string name="nombre">Nombre</string>-->

@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,7 +28,8 @@ public class RegistroUsuario extends AppCompatActivity {
 
     private EditText name;
     private EditText email;
-    private EditText password;
+    private EditText password, password2;
+    private Button bRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,122 @@ public class RegistroUsuario extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        password2 = findViewById(R.id.password2);
+        bRegister = findViewById(R.id.btnRegister2);
 
+        bRegister.setClickable(false);
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !password2.getText().toString().isEmpty()){
+                    if(password2.getText().toString().equals(password.getText().toString())) {
+                        bRegister.setBackgroundColor(getColor(R.color.pass_button));
+                        bRegister.setTextColor(getColor(R.color.white));
+                        bRegister.setClickable(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(name.getText().toString().isEmpty()){
+                    bRegister.setBackgroundColor(getColor(R.color.button_red));
+                    bRegister.setTextColor(getColor(R.color.color));
+                    bRegister.setClickable(false);
+                }
+            }
+        });
+
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!name.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !password2.getText().toString().isEmpty()){
+                    if(password2.getText().toString().equals(password.getText().toString())) {
+                        bRegister.setBackgroundColor(getColor(R.color.pass_button));
+                        bRegister.setTextColor(getColor(R.color.white));
+                        bRegister.setClickable(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(email.getText().toString().isEmpty()){
+                    bRegister.setBackgroundColor(getColor(R.color.button_red));
+                    bRegister.setTextColor(getColor(R.color.color));
+                    bRegister.setClickable(false);
+                }
+            }
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!email.getText().toString().isEmpty() && !name.getText().toString().isEmpty() && !password2.getText().toString().isEmpty()){
+                    if(password2.getText().toString().equals(password.getText().toString())) {
+                        bRegister.setBackgroundColor(getColor(R.color.pass_button));
+                        bRegister.setTextColor(getColor(R.color.white));
+                        bRegister.setClickable(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(password.getText().toString().isEmpty()){
+                    bRegister.setBackgroundColor(getColor(R.color.button_red));
+                    bRegister.setTextColor(getColor(R.color.color));
+                    bRegister.setClickable(false);
+                }
+            }
+        });
+
+        password2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !name.getText().toString().isEmpty()){
+                    if(password2.getText().toString().equals(password.getText().toString())){
+                        bRegister.setBackgroundColor(getColor(R.color.pass_button));
+                        bRegister.setTextColor(getColor(R.color.white));
+                        bRegister.setClickable(true);
+                    }else{
+                        bRegister.setBackgroundColor(getColor(R.color.button_red));
+                        bRegister.setTextColor(getColor(R.color.color));
+                        bRegister.setClickable(false);
+                        password2.setError(getString(R.string.no_coinciden));
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(password2.getText().toString().isEmpty()) {
+                    bRegister.setBackgroundColor(getColor(R.color.button_red));
+                    bRegister.setTextColor(getColor(R.color.color));
+                    bRegister.setClickable(false);
+                }
+            }
+        });
     }
 
     public void registerUser(View v){
@@ -43,7 +162,9 @@ public class RegistroUsuario extends AppCompatActivity {
         boolean nameempty = name.getText().toString().isEmpty();
         boolean emailempty = email.getText().toString().isEmpty();
         boolean passwordempty = password.getText().toString().isEmpty();
-        if (nameempty || emailempty || passwordempty){
+        boolean passwordempty2 = password2.getText().toString().isEmpty();
+
+        if (nameempty || emailempty || passwordempty || passwordempty2){
             if(nameempty) {
                 name.setError(getString(R.string.error_vacio_edit_text));
             }
@@ -52,6 +173,9 @@ public class RegistroUsuario extends AppCompatActivity {
             }
             if(passwordempty) {
                 password.setError(getString(R.string.error_vacio_edit_text));
+            }
+            if(passwordempty2){
+                password2.setError(getString(R.string.error_vacio_edit_text));
             }
         }else{
             //Linea para crear el correo con emai y contraseña
@@ -86,7 +210,6 @@ public class RegistroUsuario extends AppCompatActivity {
             });
             //Figma
         }
-
     }
 
 }
