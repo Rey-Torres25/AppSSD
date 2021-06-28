@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSSD">
-        <activity android:name=".Recuperar_contrasena"></activity>
-        <activity android:name=".Menu_principal_usuario"></activity>
+        <activity android:name=".MenuUsuario"></activity>
+        <activity android:name=".Recuperar_contrasena" />
+        <activity android:name=".Menu_principal_usuario" />
         <activity android:name=".RegistroUsuario" />
         <activity android:name=".MainActivity">
             <intent-filter>

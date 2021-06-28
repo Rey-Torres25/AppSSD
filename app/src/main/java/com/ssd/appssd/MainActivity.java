@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!mEditTextEmail.getText().toString().isEmpty()) {
-                bLogin.setBackgroundColor(Color.parseColor("#156c9e"));
-                bLogin.setTextColor(Color.parseColor("#FFFFFF"));
-                bLogin.setClickable(true);
+                    bLogin.setBackgroundColor(Color.parseColor("#156c9e"));
+                    bLogin.setTextColor(Color.parseColor("#FFFFFF"));
+                    bLogin.setClickable(true);
                 }
             }
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         });
-                        Intent iniciarSesion = new Intent(MainActivity.this, Menu_principal_usuario.class);
+                        Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
                         startActivity(iniciarSesion);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.autentificacion_error, Toast.LENGTH_LONG).show();
