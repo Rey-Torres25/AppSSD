@@ -39,7 +39,7 @@ public class Recuperar_contrasena extends AppCompatActivity {
         String correo = EmailAdress.getText().toString().trim();
 
         if (correo.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(correo).matches()){
-            EmailAdress.setError("Correo Invalido");
+            EmailAdress.setError("Correo inválido");
             return;
         }
 
@@ -68,7 +68,7 @@ public class Recuperar_contrasena extends AppCompatActivity {
                            startActivity(intent);
                            finish();
                        }else{
-                           Toast.makeText(Recuperar_contrasena.this, "Correo invalido",Toast.LENGTH_SHORT).show();
+                           Toast.makeText(Recuperar_contrasena.this, "Correo inválido",Toast.LENGTH_SHORT).show();
                        }
                     }
                 });

@@ -10,4 +10,6 @@
     <!--<string name="nombre">Nombre</string>-->
     <string name="inicio">Inicio</string>
     <string name="se_me_olvido_contraseña">Se me olvido la contraseña</string>
+
+    <string name="cerrar_sesion">Cerrar sesión</string>
 </resources>

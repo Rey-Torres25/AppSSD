@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         });
                         Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
                         startActivity(iniciarSesion);
+                        finish();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.autentificacion_error, Toast.LENGTH_LONG).show();
                     }
