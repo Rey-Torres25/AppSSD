@@ -11,16 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.MainActivity;
 import com.ssd.appssd.MenuUsuario;
 import com.ssd.appssd.R;
 
 public class PerfilFragment extends Fragment {
 
-    Button btnLogOut;
-    FirebaseAuth mAuth;
+    private Button btnLogOut;
+    private FirebaseAuth mAuth;
+    private StorageReference mStorage;
+    private ImageView photo;
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -33,6 +38,8 @@ public class PerfilFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
         btnLogOut = (Button) view.findViewById(R.id.btnLogOut);
         mAuth = FirebaseAuth.getInstance();
+        mStorage = FirebaseStorage.getInstance().getReference();
+        
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

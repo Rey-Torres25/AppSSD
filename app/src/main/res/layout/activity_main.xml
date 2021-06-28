@@ -14,7 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="80dp"
         android:textSize="50dp"
         android:text="SSD"
         android:textStyle="italic"

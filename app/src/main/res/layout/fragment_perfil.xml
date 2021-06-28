@@ -4,11 +4,21 @@
     android:layout_height="match_parent"
     tools:context="fragmentsUsuario.PerfilFragment">
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/perfil_without"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"/>
+
+
     <Button
         android:id="@+id/btnLogOut"
         android:textSize="15dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/custom_button_red"
         android:backgroundTint="@color/pass_button"
         android:textColor="@color/white"

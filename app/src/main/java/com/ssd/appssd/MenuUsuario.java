@@ -10,7 +10,9 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import fragmentsUsuario.ChatFragment;
 import fragmentsUsuario.PerfilFragment;
+import fragmentsUsuario.RecordsFragment;
 
 public class MenuUsuario extends AppCompatActivity {
 
@@ -27,11 +29,11 @@ public class MenuUsuario extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 if(item.getItemId() == R.id.registros){
-
+                    showSelectedFragment(new RecordsFragment());
                 }
 
                 if(item.getItemId() == R.id.chat){
-
+                    showSelectedFragment(new ChatFragment());
                 }
 
                 if(item.getItemId() == R.id.perfil){
