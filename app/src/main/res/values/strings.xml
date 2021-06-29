@@ -12,4 +12,7 @@
     <string name="se_me_olvido_contraseña">Se me olvido la contraseña</string>
 
     <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="elegir_usuario">Elige tu usuario</string>
+    <string name="administrador">Admin</string>
+    <string name="estandar">Estandar</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.ssd.appssd;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.ssd.appssd.globals.Global;
 import com.ssd.appssd.objects.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextEmail;
     private EditText mEditTextPassword;
     private Button bLogin;
-    private User user;
+
     TextView forgotPassword;
 
     @Override
@@ -127,14 +130,32 @@ public class MainActivity extends AppCompatActivity {
                                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                user = documentSnapshot.toObject(User.class);
-                                Toast.makeText(MainActivity.this, "Hola " + user.getNombre(), Toast.LENGTH_LONG).show();
+                                Global.user = documentSnapshot.toObject(User.class);
+                                if (Global.user.isAdmin()){
+                                    AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
+                                    dialogo.setTitle(R.string.elegir_usuario);
+                                    dialogo.setNegativeButton(R.string.administrador, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(MainActivity.this, "Hola " + Global.user.getNombre() + " eres administrador", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    dialogo.setPositiveButton(R.string.estandar, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
+                                            startActivity(iniciarSesion);
+                                            finish();
+                                        }
+                                    });
+                                    //No olvidar esta linea
+                                    dialogo.show();
+                                }
                             }
-
                         });
-                        Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
+                        /*Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
                         startActivity(iniciarSesion);
-                        finish();
+                        finish();*/
                     } else {
                         Toast.makeText(MainActivity.this, R.string.autentificacion_error, Toast.LENGTH_LONG).show();
                     }
