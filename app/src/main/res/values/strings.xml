@@ -1,18 +1,26 @@
 <resources>
-    <string name="app_name">AppSSD</string>
+        <string name="app_name">AppSSD</string>
+        <string name="nombre">Nombre</string>
+        <string name="correo_electronico">Correo electrónico</string>
+        <string name="contrasena">Contraseña</string>
 
-    <string name="nombre">Nombre</string>
-    <string name="error_vacio_edit_text">Esta vacío</string>
-    <string name="no_coinciden">Las contraseñas no coinciden</string>
-    <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
-    <string name="autentificacion_error">No se ha confirmado el correo. Favor de confirmar…</string>
-    <!--<string name="nombre">Nombre</string>-->
-    <!--<string name="nombre">Nombre</string>-->
-    <string name="inicio">Inicio</string>
-    <string name="se_me_olvido_contraseña">Se me olvido la contraseña</string>
+        <string name="error_vacio_edit_text">Esta vacío</string>
+        <string name="no_coinciden">Las contraseñas no coinciden</string>
+        <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
+        <string name="autentificacion_error">No se ha confirmado el correo. Favor de confirmar…</string>
+        <!--<string name="nombre">Nombre</string>-->
+        <!--<string name="nombre">Nombre</string>-->
 
-    <string name="cerrar_sesion">Cerrar sesión</string>
-    <string name="elegir_usuario">Elige tu usuario</string>
-    <string name="administrador">Admin</string>
-    <string name="estandar">Estandar</string>
+        <string name="inicio">Inicio</string>
+        <string name="olvidaste_tu_contraseña">¿Olvidaste tu contraseña?</string>
+        <string name="iniciar_sesion">Iniciar Sesión</string>
+        <string name="registrarse">Registrarse</string>
+        <string name="cerrar_sesion">Cerrar sesión</string>
+        <string name="elegir_usuario">Elige tu usuario</string>
+        <string name="administrador">Admin</string>
+        <string name="estandar">Estandar</string>
+        <!-- TODO: Remove or change this placeholder text -->
+        <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+
+        <string name="cambiar_idioma">Cambiar idioma</string>
 </resources>

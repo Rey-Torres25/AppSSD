@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,6 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssd.appssd.globals.Global;
 import com.ssd.appssd.objects.User;
 
+import java.util.Locale;
+
+
 public class MainActivity extends AppCompatActivity {
 
     //atributos de tipo privado
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_main);
 
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
@@ -105,8 +112,62 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //Boton de cambiar idioma
+        Button cambiarleng = findViewById(R.id.btnIdioma);
+        cambiarleng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //Se muestra la lista de idiomas a cambiar
+                showCambiarIdiomaDialog();
+            }
+        });
+
+
+    }//Termina Acitivty Main
+
+    private void showCambiarIdiomaDialog() {
+        final String[] ListItems = {"English", "Español"};
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+        mBuilder.setTitle("Escoge el idioma...");
+        mBuilder.setSingleChoiceItems(ListItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+
+                if (which == 0){
+                    //English
+                    setLocale("en");
+                    recreate();
+                }
+                else if (which == 1){
+                    //Español
+                    setLocale("es");
+                    recreate();
+                }
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog mDialog = mBuilder.create();
+        //Mostrar alerta
+        mDialog.show();
     }
 
+    private void setLocale(String idioma) {
+        Locale locale = new Locale(idioma);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
+           //Guardar Datos
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", idioma);
+        editor.apply();
+    }
+      //Cargar lenguaje guardado en preferencias
+    public void loadLocale(){
+    SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+    String language = prefs.getString("My_Lang", "");
+    setLocale(language);
+    }
 
     public void iniciarSesion(View v) {
         //Esto sirve para ingresar a la actividad iniciarSesion
@@ -182,5 +243,6 @@ public class MainActivity extends AppCompatActivity {
         Intent registro = new Intent(MainActivity.this, RegistroUsuario.class);
         startActivity(registro);
     }
+
 
 }

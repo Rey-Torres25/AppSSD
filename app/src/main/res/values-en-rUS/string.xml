@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">AppSSD</string>
-
     <string name="nombre">Name</string>
-    <string name="error_vacio_edit_text">This is empty</string>
+    <string name="correo_electronico">Email</string>
+    <string name="contrasena">Password</string>
+
+    <string name="error_vacio_edit_text">It is empty</string>
+    <string name="no_coinciden">The passwords do not match</string>
+    <string name="se_creo_usuario_correctamente">User created successfully.</string>
+    <string name="autentificacion_error">The email has not been confirmed. Please confirm…</string>
+    <!--<string name="nombre">Nombre</string>-->
+    <!--<string name="nombre">Nombre</string>-->
+
+    <string name="inicio">Main</string>
+    <string name="olvidaste_tu_contraseña">Forgot Password?</string>
+    <string name="iniciar_sesion">Log In</string>
+    <string name="registrarse">Sign up</string>
+    <string name="cerrar_sesion">Sign off</string>
+    <string name="elegir_usuario">Choose your user</string>
+    <string name="administrador">Admin</string>
+    <string name="estandar">Standar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="cambiar_idioma">Change language</string>
 </resources>
