@@ -150,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
                                     });
                                     //No olvidar esta linea
                                     dialogo.show();
+                                } else {
+                                    Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
+                                    startActivity(iniciarSesion);
+                                    finish();
                                 }
                             }
                         });
