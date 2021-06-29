@@ -1,14 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentsAdmin.PerfilFragmentAdmin">
+    tools:context="com.ssd.appssd.fragmentsUsuario.PerfilFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/perfil_without"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"/>
+
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:textSize="15dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/custom_button_red"
+        android:backgroundTint="@color/pass_button"
+        android:textColor="@color/white"
+        android:text="@string/cerrar_sesion"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        />
 
 </FrameLayout>
