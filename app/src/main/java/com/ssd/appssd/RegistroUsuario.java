@@ -190,6 +190,7 @@ public class RegistroUsuario extends AppCompatActivity {
                             //crear en la base de datos un usuario
                             User user = new User();
                             user.setNombre(name.getText().toString());
+                            user.setCorreo(email.getText().toString());
                             user.setAdmin(false);
                             FirebaseFirestore.getInstance().collection("Usuarios").
                                     document(authResult.getUser().getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

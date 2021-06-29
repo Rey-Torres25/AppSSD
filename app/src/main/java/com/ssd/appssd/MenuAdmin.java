@@ -9,35 +9,37 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.ssd.appssd.fragmentsAdmin.ChatFragmentAdmin;
+import com.ssd.appssd.fragmentsAdmin.ListUsers;
+import com.ssd.appssd.fragmentsAdmin.PerfilFragmentAdmin;
+import com.ssd.appssd.fragmentsAdmin.RecordsFragmentAdmin;
 
-import com.ssd.appssd.fragmentsUsuario.ChatFragment;
-import com.ssd.appssd.fragmentsUsuario.PerfilFragment;
-import com.ssd.appssd.fragmentsUsuario.RecordsFragment;
-
-public class MenuUsuario extends AppCompatActivity {
+public class MenuAdmin extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_usuario);
-
+        setContentView(R.layout.activity_menu_admin);
+        showSelectedFragment(new RecordsFragmentAdmin());
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        showSelectedFragment(new RecordsFragment());
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
                 if(item.getItemId() == R.id.registros){
-                    showSelectedFragment(new RecordsFragment());
+                    showSelectedFragment(new RecordsFragmentAdmin());
+                }
+
+                if(item.getItemId() == R.id.usuarios){
+                    showSelectedFragment(new ListUsers());
                 }
 
                 if(item.getItemId() == R.id.chat){
-                    showSelectedFragment(new ChatFragment());
+                    showSelectedFragment(new ChatFragmentAdmin());
                 }
 
                 if(item.getItemId() == R.id.perfil){
-                    showSelectedFragment(new PerfilFragment());
+                    showSelectedFragment(new PerfilFragmentAdmin());
                 }
                 return true;
             }

@@ -131,8 +131,11 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 Global.user = documentSnapshot.toObject(User.class);
-                                if (Global.user.isAdmin()){
-                                    AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
+                                Intent iniciarSesion;
+                                if(Global.user.isAdmin()){
+                                    iniciarSesion = new Intent(MainActivity.this, MenuAdmin.class);
+                                    // PARTE DEL DIÁLOGO (LO QUITÉ PARA PRUEBAS)
+                                    /*AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
                                     dialogo.setTitle(R.string.elegir_usuario);
                                     dialogo.setNegativeButton(R.string.administrador, new DialogInterface.OnClickListener() {
                                         @Override
@@ -149,12 +152,12 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     });
                                     //No olvidar esta linea
-                                    dialogo.show();
-                                } else {
-                                    Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
-                                    startActivity(iniciarSesion);
-                                    finish();
+                                    dialogo.show();*/
+                                }else{
+                                    iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
                                 }
+                                startActivity(iniciarSesion);
+                                finish();
                             }
                         });
                         /*Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);

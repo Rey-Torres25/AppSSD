@@ -1,4 +1,4 @@
-package fragmentsUsuario;
+package com.ssd.appssd.fragmentsUsuario;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.MainActivity;
-import com.ssd.appssd.MenuUsuario;
 import com.ssd.appssd.R;
 
 public class PerfilFragment extends Fragment {

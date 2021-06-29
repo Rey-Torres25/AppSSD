@@ -2,7 +2,7 @@ package com.ssd.appssd.objects;
 
 public class User {
 
-    private String nombre;
+    private String nombre, correo;
     private boolean admin;
 
     public User() {
@@ -13,10 +13,17 @@ public class User {
         return nombre;
     }
 
+    public String getCorreo(){
+        return correo;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    public void setCorreo(String correo){
+        this.correo = correo;
+    }
     //
     public boolean isAdmin() {
         return admin;

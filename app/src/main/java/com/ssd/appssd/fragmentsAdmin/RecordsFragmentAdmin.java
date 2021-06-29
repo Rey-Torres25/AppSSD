@@ -1,4 +1,4 @@
-package fragmentsUsuario;
+package com.ssd.appssd.fragmentsAdmin;
 
 import android.os.Bundle;
 
@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 
 import com.ssd.appssd.R;
 
-public class ChatFragment extends Fragment {
+public class RecordsFragmentAdmin extends Fragment {
 
-    public ChatFragment() {
+    public RecordsFragmentAdmin() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
         // Inflate the layout for this fragment
+
+        View view = inflater.inflate(R.layout.fragment_records_admin, container, false);
         return view;
     }
 }
