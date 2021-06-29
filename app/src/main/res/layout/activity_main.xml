@@ -9,8 +9,10 @@
 
     <TextView
         android:id="@+id/AppSSD"
+        android:layout_marginTop="60dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress"
@@ -101,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="220dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/custom_input"
