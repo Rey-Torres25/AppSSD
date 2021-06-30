@@ -3,16 +3,21 @@ package com.ssd.appssd;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthActionCodeException;
@@ -20,8 +25,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.ssd.appssd.objects.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RegistroUsuario extends AppCompatActivity {
@@ -179,6 +189,24 @@ public class RegistroUsuario extends AppCompatActivity {
             }
         }else{
             //Linea para crear el correo con emai y contraseña
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            List<String> list = new ArrayList<>();
+            db.collection("Usuarios")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    list.add(document.getData().toString());
+                                }
+                                Log.d("lista", list.toString());
+                            }else{
+                                Log.d("bruuuh", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(),
                     password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
@@ -191,7 +219,11 @@ public class RegistroUsuario extends AppCompatActivity {
                             User user = new User();
                             user.setNombre(name.getText().toString());
                             user.setCorreo(email.getText().toString());
-                            user.setAdmin(false);
+                            if(list.isEmpty()){
+                                user.setAdmin(true);
+                            }else{
+                                user.setAdmin(false);
+                            }
                             FirebaseFirestore.getInstance().collection("Usuarios").
                                     document(authResult.getUser().getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -200,7 +232,6 @@ public class RegistroUsuario extends AppCompatActivity {
                                 }
                             });
                             //FirebaseFirestore.getInstance().collection("Usuarios").add()
-
                         }
                     });
                 }
