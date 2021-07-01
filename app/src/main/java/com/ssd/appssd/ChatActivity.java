@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
 
         fStore = FirebaseFirestore.getInstance();
         fStore.collection("Usuarios")
-                .document(fAuth.getCurrentUser().getEmail())
+                .document(userCorreo)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
