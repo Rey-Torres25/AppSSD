@@ -1,20 +1,32 @@
 <resources>
         <string name="app_name">AppSSD</string>
+        <!--Parte de Iniciar sesion-->
         <string name="nombre">Nombre</string>
         <string name="correo_electronico">Correo electrónico</string>
         <string name="contrasena">Contraseña</string>
+        <string name="confirmar_contrasena">Contraseña</string>
+        <string name="olvidaste_tu_contraseña">¿Olvidaste tu contraseña?</string>
+        <string name="iniciar_sesion">Iniciar Sesión</string>
+        <string name="registrarse">Registrarse</string>
+        <string name="cambiar_idioma">Cambiar idioma</string>
+          <!--Parte de Iniciar sesion-->
 
+        <!--Parte del Registro-->
         <string name="error_vacio_edit_text">Esta vacío</string>
         <string name="no_coinciden">Las contraseñas no coinciden</string>
         <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
         <string name="autentificacion_error">No se ha confirmado el correo. Favor de confirmar…</string>
-        <!--<string name="nombre">Nombre</string>-->
+        <!--Parte del Registro-->
+
+        <!--Parte de Recupera tu contraseña-->
+        <string name="recupera_contrasena">Recupera tu contraseña</string>
+        <string name="recuperar">Recuperar</string>
+        <!--Parte de Recupera tu contraseña-->
+
         <!--<string name="nombre">Nombre</string>-->
 
         <string name="inicio">Inicio</string>
-        <string name="olvidaste_tu_contraseña">¿Olvidaste tu contraseña?</string>
-        <string name="iniciar_sesion">Iniciar Sesión</string>
-        <string name="registrarse">Registrarse</string>
+
         <string name="cerrar_sesion">Cerrar sesión</string>
         <string name="elegir_usuario">Elige tu usuario</string>
         <string name="administrador">Admin</string>
@@ -22,5 +34,16 @@
         <!-- TODO: Remove or change this placeholder text -->
         <string name="hello_blank_fragment">Hola fragmento en blanco</string>
 
-        <string name="cambiar_idioma">Cambiar idioma</string>
+
+
+
+
+
+        <!--Parte de la Barra de navegacion de Usuario Estandar-->
+        <string name="registros">Registros</string>
+        <string name="chat">Chat</string>
+        <string name="perfil">Perfil</string>
+        <!--Parte de la Barra de navegacion de Usuario Estandar-->
+
+
 </resources>

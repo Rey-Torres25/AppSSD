@@ -40,7 +40,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Correo electronico"
+        android:hint="@string/correo_electronico"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -57,7 +57,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Contraseña"
+        android:hint="@string/contrasena"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@id/password2"
         app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -74,7 +74,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Confirmar contraseña"
+        android:hint="@string/confirmar_contrasena"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@id/btnRegister2"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -90,7 +90,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="237dp"
-        android:text="Registrarte"
+        android:text="@string/registrarse"
         android:onClick="registerUser"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

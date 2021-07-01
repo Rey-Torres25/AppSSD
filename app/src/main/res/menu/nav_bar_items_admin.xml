@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/registros"
-        android:title="Registros"
+        android:title="@string/registros"
         android:icon="@drawable/ic_registros"/>
 
     <item
@@ -13,11 +13,11 @@
 
     <item
         android:id="@+id/chat"
-        android:title="Chat"
+        android:title="@string/chat"
         android:icon="@drawable/ic_chat"/>
 
     <item
         android:id="@+id/perfil"
-        android:title="Perfil"
+        android:title="@string/perfil"
         android:icon="@drawable/ic_perfil"/>
 </menu>
