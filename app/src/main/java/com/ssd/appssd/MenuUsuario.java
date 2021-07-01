@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,6 +24,8 @@ public class MenuUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_usuario);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         showSelectedFragment(new RecordsFragment());
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -30,14 +34,17 @@ public class MenuUsuario extends AppCompatActivity {
 
                 if(item.getItemId() == R.id.registros){
                     showSelectedFragment(new RecordsFragment());
+                    getSupportActionBar().setTitle("Registros");
                 }
 
                 if(item.getItemId() == R.id.chat){
                     showSelectedFragment(new ChatFragment());
+                    getSupportActionBar().setTitle("Chat");
                 }
 
                 if(item.getItemId() == R.id.perfil){
                     showSelectedFragment(new PerfilFragment());
+                    getSupportActionBar().setTitle("Perfil");
                 }
                 return true;
             }

@@ -2,10 +2,17 @@ package com.ssd.appssd.objects;
 
 public class User {
 
-    private String nombre, correo;
+    private String nombre, correo, imageURL;
     private boolean admin;
 
-    public User() {
+    public User(String nombre, String correo, String imageURL, Boolean admin) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.imageURL = imageURL;
+        this.admin = admin;
+    }
+
+    public User(){
 
     }
 
@@ -13,18 +20,26 @@ public class User {
         return nombre;
     }
 
-    public String getCorreo(){
-        return correo;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public void setCorreo(String correo){
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
         this.correo = correo;
     }
-    //
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     public boolean isAdmin() {
         return admin;
     }

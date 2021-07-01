@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,22 +17,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthActionCodeException;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.ssd.appssd.objects.User;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +38,8 @@ public class RegistroUsuario extends AppCompatActivity {
     private EditText email;
     private EditText password, password2;
     private Button bRegister;
-
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +50,9 @@ public class RegistroUsuario extends AppCompatActivity {
         password = findViewById(R.id.password);
         password2 = findViewById(R.id.password2);
         bRegister = findViewById(R.id.btnRegister2);
+
+        mAuth = FirebaseAuth.getInstance();
+        mStore = FirebaseFirestore.getInstance();
 
         bRegister.setClickable(false);
         name.addTextChangedListener(new TextWatcher() {
@@ -66,6 +68,12 @@ public class RegistroUsuario extends AppCompatActivity {
                         bRegister.setBackgroundColor(getColor(R.color.pass_button));
                         bRegister.setTextColor(getColor(R.color.white));
                         bRegister.setClickable(true);
+                        password2.setError(null);
+                    }else{
+                        bRegister.setBackgroundColor(getColor(R.color.button_red));
+                        bRegister.setTextColor(getColor(R.color.color));
+                        bRegister.setClickable(false);
+                        password2.setError(getString(R.string.no_coinciden));
                     }
                 }
             }
@@ -93,6 +101,12 @@ public class RegistroUsuario extends AppCompatActivity {
                         bRegister.setBackgroundColor(getColor(R.color.pass_button));
                         bRegister.setTextColor(getColor(R.color.white));
                         bRegister.setClickable(true);
+                        password2.setError(null);
+                    }else{
+                        bRegister.setBackgroundColor(getColor(R.color.button_red));
+                        bRegister.setTextColor(getColor(R.color.color));
+                        bRegister.setClickable(false);
+                        password2.setError(getString(R.string.no_coinciden));
                     }
                 }
             }
@@ -120,6 +134,13 @@ public class RegistroUsuario extends AppCompatActivity {
                         bRegister.setBackgroundColor(getColor(R.color.pass_button));
                         bRegister.setTextColor(getColor(R.color.white));
                         bRegister.setClickable(true);
+                        password2.setError(null);
+                    }else{
+                        bRegister.setBackgroundColor(getColor(R.color.button_red));
+                        bRegister.setTextColor(getColor(R.color.color));
+                        bRegister.setClickable(false);
+
+                        password2.setError(getString(R.string.no_coinciden));
                     }
                 }
             }
@@ -188,16 +209,13 @@ public class RegistroUsuario extends AppCompatActivity {
                 password2.setError(getString(R.string.error_vacio_edit_text));
             }
         }else{
-            //Linea para crear el correo con emai y contraseña
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             List<String> list = new ArrayList<>();
-            db.collection("Usuarios")
+            mStore.collection("Usuarios")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()){
-
                                 for (QueryDocumentSnapshot document : task.getResult()){
                                     list.add(document.getData().toString());
                                 }
@@ -207,41 +225,49 @@ public class RegistroUsuario extends AppCompatActivity {
                             }
                         }
                     });
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(),
-                    password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(),
+                    password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
-                public void onSuccess(AuthResult authResult) {
-                    //mandar un correo para autentificar
-                    authResult.getUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            //crear en la base de datos un usuario
-                            User user = new User();
-                            user.setNombre(name.getText().toString());
-                            user.setCorreo(email.getText().toString());
-                            if(list.isEmpty()){
-                                user.setAdmin(true);
-                            }else{
-                                user.setAdmin(false);
-                            }
-                            FirebaseFirestore.getInstance().collection("Usuarios").
-                                    document(authResult.getUser().getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(RegistroUsuario.this, R.string.se_creo_usuario_correctamente, Toast.LENGTH_LONG).show();
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()){
+                        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("nombre", name.getText().toString());
+                                    user.put("correo", email.getText().toString());
+                                    user.put("imageURL", "default");
+                                    if(list.isEmpty()){
+                                        user.put("admin", true);
+                                    }else{
+                                        user.put("admin", false);
+                                    }
+                                    mStore.collection("Usuarios")
+                                            .document(email.getText().toString())
+                                            .set(user)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        Toast.makeText(RegistroUsuario.this, "Te has registrado correctamente. Favor de checar tu correo por verificación",
+                                                                Toast.LENGTH_LONG).show();
+                                                        mAuth.signOut();
+                                                    }else{
+                                                        Toast.makeText(RegistroUsuario.this, task.getException().getMessage(),
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(RegistroUsuario.this, task.getException().getMessage(),
+                                            Toast.LENGTH_LONG).show();
                                 }
-                            });
-                            //FirebaseFirestore.getInstance().collection("Usuarios").add()
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(RegistroUsuario.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
             });
-            //Figma
         }
     }
 

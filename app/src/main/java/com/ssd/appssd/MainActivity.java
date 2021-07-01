@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,20 +14,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.ssd.appssd.globals.Global;
-import com.ssd.appssd.objects.User;
 
 import java.util.Locale;
 
@@ -37,21 +40,50 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextEmail;
     private EditText mEditTextPassword;
     private Button bLogin;
-
+    private FirebaseUser mUser;
+    private FirebaseFirestore mStore;
+    private FirebaseAuth mAuth;
     TextView forgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadLocale();
         setContentView(R.layout.activity_main);
+        loadLocale();
+
+        //Firebase Instances
+        mStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        if(mUser != null){
+            mStore.collection("Usuarios")
+                    .document(mUser.getEmail())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot.exists()){
+                                Intent intent;
+                                if(Boolean.parseBoolean(documentSnapshot.get("admin").toString())){
+                                    intent = new Intent(MainActivity.this, MenuAdmin.class);
+                                }else
+                                    intent = new Intent(MainActivity.this, MenuUsuario.class);
+                                startActivity(intent);
+                                finish();
+                            }else{
+                            }
+                        }
+                    });
+        }else{
+
+        }
 
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);
         bLogin = findViewById(R.id.btnSignIn);
         forgotPassword = findViewById(R.id.se_me_olvido_contraseña);
-
-
         bLogin.setClickable(false);
         mEditTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -182,56 +214,42 @@ public class MainActivity extends AppCompatActivity {
                 mEditTextPassword.setError(getString(R.string.error_vacio_edit_text));
             }
         } else {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(mEditTextEmail.getText().toString(),
-                    mEditTextPassword.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(mEditTextEmail.getText().toString(),
+                    mEditTextPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
-                public void onSuccess(AuthResult authResult) {
-                    if(authResult.getUser().isEmailVerified()) {
-                        FirebaseFirestore.getInstance().collection("Usuarios").document(authResult.getUser().getUid())
-                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                Global.user = documentSnapshot.toObject(User.class);
-                                Intent iniciarSesion;
-                                if(Global.user.isAdmin()){
-                                    iniciarSesion = new Intent(MainActivity.this, MenuAdmin.class);
-                                    // PARTE DEL DIÁLOGO (LO QUITÉ PARA PRUEBAS)
-                                    /*AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
-                                    dialogo.setTitle(R.string.elegir_usuario);
-                                    dialogo.setNegativeButton(R.string.administrador, new DialogInterface.OnClickListener() {
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        if(mAuth.getCurrentUser().isEmailVerified()){
+                            mStore.collection("Usuarios")
+                                    .document(mAuth.getCurrentUser().getEmail())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(MainActivity.this, "Hola " + Global.user.getNombre() + " eres administrador", Toast.LENGTH_LONG).show();
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            if(documentSnapshot.exists()){
+                                                Intent intent;
+                                                if(Boolean.parseBoolean(documentSnapshot.get("admin").toString())){
+                                                    intent = new Intent(MainActivity.this, MenuAdmin.class);
+                                                }else
+                                                    intent = new Intent(MainActivity.this, MenuUsuario.class);
+                                                Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                startActivity(intent);
+                                                finish();
+                                            }else{
+                                                Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     });
-                                    dialogo.setPositiveButton(R.string.estandar, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
-                                            startActivity(iniciarSesion);
-                                            finish();
-                                        }
-                                    });
-                                    //No olvidar esta linea
-                                    dialogo.show();*/
-                                }else{
-                                    iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
-                                }
-                                startActivity(iniciarSesion);
-                                finish();
-                            }
-                        });
-                        /*Intent iniciarSesion = new Intent(MainActivity.this, MenuUsuario.class);
-                        startActivity(iniciarSesion);
-                        finish();*/
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.autentificacion_error, Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Su correo no ha sido verificado, favor de verificar.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MainActivity.this, e.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
         }
