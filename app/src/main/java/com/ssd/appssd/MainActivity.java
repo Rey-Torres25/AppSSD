@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.ssd.appssd.objects.User;
 
 import java.util.Locale;
 
@@ -60,20 +61,18 @@ public class MainActivity extends AppCompatActivity {
             mStore.collection("Usuarios")
                     .document(mUser.getEmail())
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if(documentSnapshot.exists()){
-                                Intent intent;
-                                if(Boolean.parseBoolean(documentSnapshot.get("admin").toString())){
-                                    intent = new Intent(MainActivity.this, MenuAdmin.class);
-                                }else
-                                    intent = new Intent(MainActivity.this, MenuUsuario.class);
-                                startActivity(intent);
-                                finish();
-                            }else{
-                            }
+                    .addOnCompleteListener(task -> {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot.exists()){
+                            Intent intent;
+                            User user = documentSnapshot.toObject(User.class);
+                            if(user.isAdmin()){
+                                intent = new Intent(MainActivity.this, MenuAdmin.class);
+                            }else
+                                intent = new Intent(MainActivity.this, MenuUsuario.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
                         }
                     });
         }else{
