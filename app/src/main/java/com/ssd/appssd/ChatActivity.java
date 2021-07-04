@@ -68,7 +68,6 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         scrollView = findViewById(R.id.scrollViewChat);
-        //Firebase
         fAuth = FirebaseAuth.getInstance();
         fUser = fAuth.getCurrentUser();
         fStore = FirebaseFirestore.getInstance();
