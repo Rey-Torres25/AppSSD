@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -238,6 +239,7 @@ public class RegistroUsuario extends AppCompatActivity {
                                     user.put("nombre", name.getText().toString());
                                     user.put("correo", email.getText().toString());
                                     user.put("imageURL", "default");
+                                    user.put("timestamp", FieldValue.serverTimestamp());
                                     if(list.isEmpty()){
                                         user.put("admin", true);
                                     }else{

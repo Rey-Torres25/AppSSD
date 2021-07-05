@@ -1,8 +1,12 @@
 package com.ssd.appssd.fragmentsAdmin;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,19 +14,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.MainActivity;
 import com.ssd.appssd.R;
+import com.ssd.appssd.objects.User;
+
+import java.io.ByteArrayOutputStream;
+
+import static android.app.Activity.RESULT_OK;
 
 public class PerfilFragmentAdmin extends Fragment {
 
-    private Button btnLogOut;
+    private Button btnLogOut, btnUpload;
     private FirebaseAuth mAuth;
-    private StorageReference mStorage;
+    private FirebaseFirestore mStore;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
     private ImageView photo;
+    private Uri path;
+    private User user;
+    private final long ONE_MEGABYTE = 1024 * 1024;
+    private static final int SELECT_FILE = 1;
 
     public PerfilFragmentAdmin() {
         // Required empty public constructor
@@ -33,11 +57,78 @@ public class PerfilFragmentAdmin extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_perfil_admin, container, false);
+        View view = inflater.inflate(R.layout.fragment_perfil, container, false);
         btnLogOut = (Button) view.findViewById(R.id.btnLogOut);
+        btnUpload = (Button) view.findViewById(R.id.upload);
+        photo = view.findViewById(R.id.profile_image);
         mAuth = FirebaseAuth.getInstance();
-        mStorage = FirebaseStorage.getInstance().getReference();
+        mStore = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = mStore.collection("Usuarios").document(mAuth.getCurrentUser().getEmail());
+        documentReference
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        user = documentSnapshot.toObject(User.class);
+                        if(!user.getImageURL().equals("default")){
+                            storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
+                            storageReference
+                                    .getBytes(ONE_MEGABYTE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Glide.with(getActivity())
+                                                    .load(bytes)
+                                                    .into(photo);
+                                        }
+                                    });
+                        }
+                    }
+                });
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
+                photo.setDrawingCacheEnabled(true);
+                photo.buildDrawingCache();
+                Bitmap bitmap = ((BitmapDrawable) photo.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = storageReference.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Hubo un error al subir tu imagen",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        documentReference
+                                .update("imageURL", storageReference.toString())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(getActivity(), "Tu imagen se ha subido correctamente",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                });
+            }
+        });
+
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirGaleria();
+            }
+        });
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,4 +140,25 @@ public class PerfilFragmentAdmin extends Fragment {
         });
         return view;
     }
+
+    public void abrirGaleria(){
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent.createChooser(intent, "Seleccione una imagen"),
+                10);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            path = data.getData();
+            photo.setImageURI(path);
+            btnUpload.setVisibility(View.VISIBLE);
+            btnUpload.setEnabled(true);
+
+
+        }
+    }
+
 }

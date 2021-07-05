@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
@@ -63,6 +64,7 @@ public class ChatFragment extends Fragment {
 
     private void readUsers(){
         mStore.collection("Usuarios")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -76,7 +78,6 @@ public class ChatFragment extends Fragment {
                                 if(!user.getCorreo().equals(mUser.getEmail())){
                                     mUsers.add(user);
                                 }
-
                                 userAdapter = new UserAdapter(getContext(), mUsers);
                                 recyclerView.setAdapter(userAdapter);
                             }

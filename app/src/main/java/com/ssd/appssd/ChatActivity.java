@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.components.ComponentMessage;
 import com.ssd.appssd.objects.Message;
 import com.ssd.appssd.objects.User;
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.grpc.Context;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -51,6 +55,8 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseUser fUser;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
+    FirebaseStorage fStorage;
+    StorageReference storageReference;
     String chatID;
 
     ImageButton btnSend;
@@ -59,6 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayout padre;
     List<String> messages;
     Intent intent;
+    final long ONE_MEGABYTE = 1024 * 1024;
     ScrollView scrollView; //barra de scroll para el chat
     Runnable paginar;    //Evento para redireccionar hasta abajo el chat
 
@@ -71,6 +78,8 @@ public class ChatActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fUser = fAuth.getCurrentUser();
         fStore = FirebaseFirestore.getInstance();
+        fStorage = FirebaseStorage.getInstance();
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -114,7 +123,16 @@ public class ChatActivity extends AppCompatActivity {
                         if(user.getImageURL().equals("default")){
                             profile_image.setImageResource(R.drawable.perfil_without);
                         }else{
-                            Glide.with(ChatActivity.this).load(user.getImageURL()).into(profile_image);
+                            storageReference = fStorage.getReference().child("images/"+user.getCorreo()+"/profile_picture");
+                            storageReference.getBytes(ONE_MEGABYTE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Glide.with(ChatActivity.this)
+                                                    .load(bytes)
+                                                    .into(profile_image);
+                                        }
+                                    });
                         }
                     }
                 });
@@ -159,7 +177,6 @@ public class ChatActivity extends AppCompatActivity {
                             crearMensaje(messagesL.get(i));
                         }
                     }
-                    Toast.makeText(ChatActivity.this, messages.size() + "  ", Toast.LENGTH_SHORT).show();
                 });
     }
 

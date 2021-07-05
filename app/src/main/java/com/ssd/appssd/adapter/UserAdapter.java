@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.R;
 import com.ssd.appssd.objects.User;
@@ -21,7 +24,7 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
-
+    private final long ONE_MEGABYTE = 1024 * 1024;
     public UserAdapter(Context mContext, List<User> mUsers) {
         this.mUsers = mUsers;
         this.mContext = mContext;
@@ -41,7 +44,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if(user.getImageURL().equals("default")){
             holder.profile_image.setImageResource(R.drawable.perfil_without);
         }else{
-            Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = firebaseStorage.getReference().child("images/"+user.getCorreo()+"/profile_picture");
+            storageReference.getBytes(ONE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Glide.with(mContext)
+                                    .load(bytes)
+                                    .into(holder.profile_image);
+                        }
+                    });
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
