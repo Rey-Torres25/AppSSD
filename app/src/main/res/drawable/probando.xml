@@ -16,7 +16,7 @@
     <item android:gravity="bottom">
         <shape android:shape="rectangle">
             <size android:height="2dp"/>
-            <solid android:color="@color/stroke" />
+            <solid android:color="@color/border_grey" />
         </shape>
     </item>
 

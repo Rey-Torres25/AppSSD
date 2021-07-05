@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class PerfilFragmentAdmin extends Fragment {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private ImageView photo;
+    private EditText editNombre, editCorreo;
     private Uri path;
     private User user;
     private final long ONE_MEGABYTE = 1024 * 1024;
@@ -60,6 +62,8 @@ public class PerfilFragmentAdmin extends Fragment {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
         btnLogOut = (Button) view.findViewById(R.id.btnLogOut);
         btnUpload = (Button) view.findViewById(R.id.upload);
+        editNombre = view.findViewById(R.id.editNombre);
+        editCorreo = view.findViewById(R.id.editCorreo);
         photo = view.findViewById(R.id.profile_image);
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
@@ -70,6 +74,8 @@ public class PerfilFragmentAdmin extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         user = documentSnapshot.toObject(User.class);
+                        editNombre.setText(user.getNombre());
+                        editCorreo.setText(user.getCorreo());
                         if(!user.getImageURL().equals("default")){
                             storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
                             storageReference
@@ -82,6 +88,8 @@ public class PerfilFragmentAdmin extends Fragment {
                                                     .into(photo);
                                         }
                                     });
+                        }else{
+                            photo.setImageResource(R.drawable.perfil_without);
                         }
                     }
                 });
@@ -116,6 +124,8 @@ public class PerfilFragmentAdmin extends Fragment {
                                     public void onSuccess(Void unused) {
                                         Toast.makeText(getActivity(), "Tu imagen se ha subido correctamente",
                                                 Toast.LENGTH_SHORT).show();
+                                        btnUpload.setVisibility(View.INVISIBLE);
+                                        btnUpload.setEnabled(false);
                                     }
                                 });
                     }
@@ -156,8 +166,6 @@ public class PerfilFragmentAdmin extends Fragment {
             photo.setImageURI(path);
             btnUpload.setVisibility(View.VISIBLE);
             btnUpload.setEnabled(true);
-
-
         }
     }
 
