@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -84,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         spinner = findViewById(R.id.options);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.options_user, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.getBackground().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.options_user, R.layout.style_spinner);
         spinner.setAdapter(adapter);
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);

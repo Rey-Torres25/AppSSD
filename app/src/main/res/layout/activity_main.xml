@@ -31,6 +31,7 @@
         app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:popupBackground="@drawable/spinner_dropdown"
         />
 
     <EditText
