@@ -113,10 +113,53 @@
             android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@id/correo"
             app:layout_constraintStart_toStartOf="@id/editNombre"
-            app:layout_constraintEnd_toEndOf="@id/editNombre"
+            app:layout_constraintEnd_toEndOf="@id/editNombre"/>
 
-            />
+        <TextView
+            android:textSize="15dp"
+            android:id="@+id/token"
+            app:layout_constraintStart_toStartOf="@id/nombre"
+            android:text="@string/token"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/editToken"
+            app:layout_constraintTop_toBottomOf="@id/editCorreo" />
 
+        <EditText
+            android:hint="@string/token"
+            android:id="@+id/editToken"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:padding="5dp"
+            android:textColorHint="@color/color"
+            android:background="@drawable/custom_input"
+            android:backgroundTint="@color/border_grey"
+            android:textColor="@color/white"
+            android:inputType="text"
+            app:layout_constraintTop_toBottomOf="@id/token"
+            app:layout_constraintStart_toStartOf="@id/editNombre"
+            app:layout_constraintEnd_toEndOf="@id/editNombre"/>
+
+        <Button
+            android:id="@+id/btnRegistrarToken"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/custom_button_red"
+            android:backgroundTint="@color/pass_button"
+            android:text="@string/registrar_token"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="@id/editCorreo"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@id/editCorreo"
+            app:layout_constraintTop_toBottomOf="@+id/editToken" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                                     document(mUser.getEmail()).
                                     get().addOnSuccessListener(documentSnapshot1 -> {
                                         if(documentSnapshot1.exists()) {
-                                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot1.get("nombre")+"!",
                                                     Toast.LENGTH_SHORT).show();
                                             Intent userEs = new Intent(MainActivity.this, MenuUsuario.class);
                                             startActivity(userEs);

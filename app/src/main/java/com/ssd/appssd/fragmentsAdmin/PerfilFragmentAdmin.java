@@ -30,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.MainActivity;
 import com.ssd.appssd.R;
+import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
 
 import java.io.ByteArrayOutputStream;
@@ -46,7 +47,7 @@ public class PerfilFragmentAdmin extends Fragment {
     private ImageView photo;
     private EditText editNombre, editCorreo;
     private Uri path;
-    private User user;
+    private Admin user;
     private final long ONE_MEGABYTE = 1024 * 1024;
     private static final int SELECT_FILE = 1;
 
@@ -59,7 +60,7 @@ public class PerfilFragmentAdmin extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_perfil, container, false);
+        View view = inflater.inflate(R.layout.fragment_perfil_admin, container, false);
         btnLogOut = (Button) view.findViewById(R.id.btnLogOut);
         btnUpload = (Button) view.findViewById(R.id.upload);
         editNombre = view.findViewById(R.id.editNombre);
@@ -67,13 +68,13 @@ public class PerfilFragmentAdmin extends Fragment {
         photo = view.findViewById(R.id.profile_image);
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = mStore.collection("Usuarios").document(mAuth.getCurrentUser().getEmail());
+        DocumentReference documentReference = mStore.collection("Administrador").document(mAuth.getCurrentUser().getEmail());
         documentReference
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        user = documentSnapshot.toObject(User.class);
+                        user = documentSnapshot.toObject(Admin.class);
                         editNombre.setText(user.getNombre());
                         editCorreo.setText(user.getCorreo());
                         if(!user.getImageURL().equals("default")){

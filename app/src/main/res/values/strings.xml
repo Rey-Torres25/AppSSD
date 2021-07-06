@@ -18,8 +18,10 @@
         <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
         <string name="autentificacion_error">No se ha confirmado el correo. Favor de confirmar…</string>
         <string name="token">Token</string>
+        <string name="registro_token_correctamente">Se registro su token correctamente.</string>
         <string name="token_no_existe">El token que ingreso no existe, favor de verificarlo.</string>
         <string name="token_en_uso">El token que ingreso ya esta en uso!, favor de ingresar otro.</string>
+        <string name="registrar_token">Registrar Token.</string>
         <!--Parte del Registro-->
 
         <!--Parte de Recupera tu contraseña-->
