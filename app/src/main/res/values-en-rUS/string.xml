@@ -19,11 +19,13 @@
     <string name="no_coinciden">The passwords do not match</string>
     <string name="se_creo_usuario_correctamente">User created successfully.</string>
     <string name="autentificacion_error">The email has not been confirmed. Please confirm…</string>
+    <string name="token">Token</string>
     <!--Parte del Registro-->
 
     <!--Parte de Recupera tu contraseña-->
     <string name="recupera_contrasena">Recover your password</string>
     <string name="recuperar">Recover</string>
+
     <!--Parte de Recupera tu contraseña-->
 
     <!--<string name="nombre">Nombre</string>-->

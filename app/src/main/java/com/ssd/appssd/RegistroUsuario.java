@@ -1,37 +1,20 @@
 package com.ssd.appssd;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ssd.appssd.objects.Standar;
 
 public class RegistroUsuario extends AppCompatActivity {
 
@@ -195,7 +178,6 @@ public class RegistroUsuario extends AppCompatActivity {
         boolean emailempty = email.getText().toString().isEmpty();
         boolean passwordempty = password.getText().toString().isEmpty();
         boolean passwordempty2 = password2.getText().toString().isEmpty();
-
         if (nameempty || emailempty || passwordempty || passwordempty2){
             if(nameempty) {
                 name.setError(getString(R.string.error_vacio_edit_text));
@@ -210,66 +192,33 @@ public class RegistroUsuario extends AppCompatActivity {
                 password2.setError(getString(R.string.error_vacio_edit_text));
             }
         }else{
-            List<String> list = new ArrayList<>();
-            mStore.collection("Usuarios")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()){
-                                for (QueryDocumentSnapshot document : task.getResult()){
-                                    list.add(document.getData().toString());
-                                }
-                                Log.d("lista", list.toString());
-                            }else{
-                                Log.d("bruuuh", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
+
             mAuth.createUserWithEmailAndPassword(email.getText().toString(),
-                    password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Map<String, Object> user = new HashMap<>();
-                                    user.put("nombre", name.getText().toString());
-                                    user.put("correo", email.getText().toString());
-                                    user.put("imageURL", "default");
-                                    user.put("timestamp", FieldValue.serverTimestamp());
-                                    if(list.isEmpty()){
-                                        user.put("admin", true);
-                                    }else{
-                                        user.put("admin", false);
-                                    }
-                                    mStore.collection("Usuarios")
+                    password.getText().toString()).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task12 -> {
+                                if(task12.isSuccessful()){
+                                    Standar user = new Standar(name.getText().toString(), email.getText().toString(), "", "", "");
+                                    mStore.collection("UsuarioEstandar")
                                             .document(email.getText().toString())
                                             .set(user)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()){
-                                                        Toast.makeText(RegistroUsuario.this, "Te has registrado correctamente. Favor de checar tu correo por verificación",
-                                                                Toast.LENGTH_LONG).show();
-                                                        mAuth.signOut();
-                                                    }else{
-                                                        Toast.makeText(RegistroUsuario.this, task.getException().getMessage(),
-                                                                Toast.LENGTH_LONG).show();
-                                                    }
+                                            .addOnCompleteListener(task1 -> {
+                                                if(task1.isSuccessful()){
+                                                    Toast.makeText(RegistroUsuario.this, "Te has registrado correctamente. Favor de checar tu correo por verificación",
+                                                            Toast.LENGTH_LONG).show();
+                                                    mAuth.signOut();
+                                                }else{
+                                                    Toast.makeText(RegistroUsuario.this, task1.getException().getMessage(),
+                                                            Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                 }else{
-                                    Toast.makeText(RegistroUsuario.this, task.getException().getMessage(),
+                                    Toast.makeText(RegistroUsuario.this, task12.getException().getMessage(),
                                             Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        });
-                    }
-                }
-            });
+                            });
+                        }
+                    });
         }
     }
 

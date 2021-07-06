@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         loadLocale();
+        setContentView(R.layout.activity_main);
 
         //Firebase Instances
         mStore = FirebaseFirestore.getInstance();
@@ -63,31 +64,35 @@ public class MainActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         if(mUser != null){
-            mStore.collection("Usuarios")
+            mStore.collection("Administrador")
                     .document(mUser.getEmail())
                     .get()
-                    .addOnCompleteListener(task -> {
-                        DocumentSnapshot documentSnapshot = task.getResult();
+                    .addOnSuccessListener(documentSnapshot -> {
                         if(documentSnapshot.exists()){
-                            Intent intent;
-                            User user = documentSnapshot.toObject(User.class);
-                            if(user.isAdmin()){
-                                intent = new Intent(MainActivity.this, MenuAdmin.class);
-                            }else
-                                intent = new Intent(MainActivity.this, MenuUsuario.class);
-                            startActivity(intent);
-                            finish();
-                        }else{
+                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent admin = new Intent(MainActivity.this, MenuAdmin.class);
+                            startActivity(admin);
+                        } else {
+                            mStore.collection("UsuarioEstandar").
+                                    document(mUser.getEmail()).
+                                    get().addOnSuccessListener(documentSnapshot1 -> {
+                                        if(documentSnapshot1.exists()) {
+                                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent userEs = new Intent(MainActivity.this, MenuUsuario.class);
+                                            startActivity(userEs);
+                                        }
+                                    });
                         }
                     });
-        }else{
-
         }
 
         spinner = findViewById(R.id.options);
         spinner.getBackground().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.options_user, R.layout.style_spinner);
         spinner.setAdapter(adapter);
+
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);
         bLogin = findViewById(R.id.btnSignIn);
@@ -204,16 +209,15 @@ public class MainActivity extends AppCompatActivity {
     }
       //Cargar lenguaje guardado en preferencias
     public void loadLocale(){
-    SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
-    String language = prefs.getString("My_Lang", "");
-    setLocale(language);
+        SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "es");
+        setLocale(language);
     }
 
     public void iniciarSesion(View v) {
         //Esto sirve para ingresar a la actividad iniciarSesion
         boolean emailEmpty = mEditTextEmail.getText().toString().isEmpty();
         boolean passwordEmpty = mEditTextPassword.getText().toString().isEmpty();
-
         if(emailEmpty || passwordEmpty) {
             if(emailEmpty) {
                 mEditTextEmail.setError(getString(R.string.error_vacio_edit_text));
@@ -228,29 +232,13 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         if(mAuth.getCurrentUser().isEmailVerified()){
-                            mStore.collection("Usuarios")
-                                    .document(mAuth.getCurrentUser().getEmail())
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            DocumentSnapshot documentSnapshot = task.getResult();
-                                            if(documentSnapshot.exists()){
-                                                Intent intent;
-                                                if(Boolean.parseBoolean(documentSnapshot.get("admin").toString())){
-                                                    intent = new Intent(MainActivity.this, MenuAdmin.class);
-                                                }else
-                                                    intent = new Intent(MainActivity.this, MenuUsuario.class);
-                                                Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
-                                                        Toast.LENGTH_SHORT).show();
-                                                startActivity(intent);
-                                                finish();
-                                            }else{
-                                                Toast.makeText(MainActivity.this, task.getException().getMessage(),
-                                                        Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
+                            int item = spinner.getSelectedItemPosition();
+                            if(item == 0) {
+                                iniciarSesionDataBase(MenuAdmin.class,"Administrador");
+                            } else {
+                                iniciarSesionDataBase(MenuUsuario.class, "UsuarioEstandar");
+                            }
+
                         }else{
                             Toast.makeText(MainActivity.this, "Su correo no ha sido verificado, favor de verificar.",
                                     Toast.LENGTH_LONG).show();
@@ -263,6 +251,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void iniciarSesionDataBase(Class clase, String collection) {
+        mStore.collection(collection)
+                .document(mAuth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if(documentSnapshot.exists()){
+                        Intent intent = new Intent(MainActivity.this, clase);
+                        Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     public void registerUser(View view){
         //Esto sirve para ingresar a la actividad RegistroUsuario

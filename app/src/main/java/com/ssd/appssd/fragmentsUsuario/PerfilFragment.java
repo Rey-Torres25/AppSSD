@@ -32,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ssd.appssd.MainActivity;
 import com.ssd.appssd.R;
+import com.ssd.appssd.objects.Standar;
 import com.ssd.appssd.objects.User;
 
 import java.io.ByteArrayOutputStream;
@@ -69,32 +70,29 @@ public class PerfilFragment extends Fragment {
         photo = view.findViewById(R.id.profile_image);
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = mStore.collection("Usuarios").document(mAuth.getCurrentUser().getEmail());
+        DocumentReference documentReference = mStore.collection("UsuarioEstandar").document(mAuth.getCurrentUser().getEmail());
         documentReference
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-               user = documentSnapshot.toObject(User.class);
-                editNombre.setText(user.getNombre());
-                editCorreo.setText(user.getCorreo());
-                if(!user.getImageURL().equals("default")){
-                    storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
-                    storageReference
-                            .getBytes(ONE_MEGABYTE)
-                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    Glide.with(getActivity())
-                                            .load(bytes)
-                                            .into(photo);
-                                }
-                            });
-                }else{
-                    photo.setImageResource(R.drawable.perfil_without);
-                }
-            }
-        });
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(Standar.class);
+                    editNombre.setText(user.getNombre());
+                    editCorreo.setText(user.getCorreo());
+                    if(!user.getImageURL().equals("default")){
+                        storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
+                        storageReference
+                                .getBytes(ONE_MEGABYTE)
+                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        Glide.with(getActivity())
+                                                .load(bytes)
+                                                .into(photo);
+                                    }
+                                });
+                    }else{
+                        photo.setImageResource(R.drawable.perfil_without);
+                    }
+                });
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();

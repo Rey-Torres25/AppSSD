@@ -2,14 +2,13 @@ package com.ssd.appssd.objects;
 
 public class User {
 
-    private String nombre, correo, imageURL;
-    private boolean admin;
+    private String nombre, correo, imageURL, token;
 
-    public User(String nombre, String correo, String imageURL, Boolean admin) {
+    public User(String nombre, String correo, String imageURL, String token) {
         this.nombre = nombre;
         this.correo = correo;
         this.imageURL = imageURL;
-        this.admin = admin;
+        this.token = token;
     }
 
     public User(){
@@ -40,11 +39,11 @@ public class User {
         this.imageURL = imageURL;
     }
 
-    public boolean isAdmin() {
-        return admin;
+    public String getToken() {
+        return token;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

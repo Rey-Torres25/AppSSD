@@ -4,11 +4,12 @@
         <string name="nombre">Nombre</string>
         <string name="correo_electronico">Correo electrónico</string>
         <string name="contrasena">Contraseña</string>
-        <string name="confirmar_contrasena">Contraseña</string>
+        <string name="confirmar_contrasena">Confirmar Contraseña</string>
         <string name="olvidaste_tu_contraseña">¿Olvidaste tu contraseña?</string>
         <string name="iniciar_sesion">Iniciar Sesión</string>
         <string name="registrarse">Registrarse</string>
         <string name="cambiar_idioma">Cambiar idioma</string>
+        <string name="no_existe_usuario">No existe usuario</string>
           <!--Parte de Iniciar sesion-->
 
         <!--Parte del Registro-->
@@ -16,6 +17,9 @@
         <string name="no_coinciden">Las contraseñas no coinciden</string>
         <string name="se_creo_usuario_correctamente">Se creó usuario correctamente.</string>
         <string name="autentificacion_error">No se ha confirmado el correo. Favor de confirmar…</string>
+        <string name="token">Token</string>
+        <string name="token_no_existe">El token que ingreso no existe, favor de verificarlo.</string>
+        <string name="token_en_uso">El token que ingreso ya esta en uso!, favor de ingresar otro.</string>
         <!--Parte del Registro-->
 
         <!--Parte de Recupera tu contraseña-->
