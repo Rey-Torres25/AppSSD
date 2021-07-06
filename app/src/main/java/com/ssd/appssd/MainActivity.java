@@ -16,8 +16,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssd.appssd.objects.User;
 
+import java.lang.reflect.Array;
 import java.util.Locale;
 
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
+    private Spinner spinner;
     TextView forgotPassword;
 
     @Override
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        spinner = findViewById(R.id.options);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.options_user, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         mEditTextEmail = findViewById(R.id.editTextTextEmailAddress);
         mEditTextPassword = findViewById(R.id.editTextTextPassword);
         bLogin = findViewById(R.id.btnSignIn);

@@ -39,4 +39,9 @@
         <string name="chat">Chat</string>
         <string name="perfil">Perfil</string>
         <!--Parte de la Barra de navegacion de Usuario Estandar-->
+
+        <string-array name="options_user">
+                <item>Administrador</item>
+                <item>Usuario</item>
+        </string-array>
 </resources>

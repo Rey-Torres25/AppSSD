@@ -38,9 +38,8 @@
 
         <Button
             android:id="@+id/btnLogOut"
-            android:layout_marginBottom="140dp"
             android:textSize="15dp"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="150dp"
             android:background="@drawable/custom_button_red"
             android:backgroundTint="@color/pass_button"
             android:textColor="@color/white"

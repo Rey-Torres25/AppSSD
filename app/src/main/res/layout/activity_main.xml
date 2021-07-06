@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="#e6e6e6"
     tools:context=".MainActivity">
 
     <TextView
@@ -20,7 +20,17 @@
         android:textSize="50dp"
         android:text="SSD"
         android:textStyle="italic"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
+        />
+
+    <Spinner
+        android:id="@+id/options"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/AppSSD"
+        app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         />
 
     <EditText
