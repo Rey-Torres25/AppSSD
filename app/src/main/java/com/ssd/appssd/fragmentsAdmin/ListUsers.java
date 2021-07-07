@@ -39,6 +39,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
 import com.ssd.appssd.RegistroUsuario;
+import com.ssd.appssd.adapter.ListAdapter;
 import com.ssd.appssd.adapter.UserAdapter;
 import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
@@ -51,7 +52,7 @@ import java.util.Map;
 public class ListUsers extends Fragment {
 
     private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
+    private ListAdapter userAdapter;
     private List<User> mUsers;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
@@ -87,8 +88,7 @@ public class ListUsers extends Fragment {
 
     private void readUsers(){
         CollectionReference collectionReference = mStore.collection("Usuarios");
-                collectionReference.whereEqualTo("correoPadre", mUser.getEmail())
-                .whereEqualTo("correoPadre", mUser.getEmail())
+        collectionReference.whereEqualTo("correoPadre", mUser.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -102,9 +102,9 @@ public class ListUsers extends Fragment {
                                 if(!user.getCorreo().equals(mUser.getEmail())){
                                     mUsers.add(user);
                                 }
-                                userAdapter = new UserAdapter(getContext(), mUsers);
-                                recyclerView.setAdapter(userAdapter);
                             }
+                            userAdapter = new ListAdapter(getContext(), mUsers);
+                            recyclerView.setAdapter(userAdapter);
                         }
                     }
                 });

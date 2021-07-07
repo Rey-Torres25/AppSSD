@@ -8,21 +8,27 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
 import com.ssd.appssd.adapter.UserAdapter;
+import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
 
 import java.util.ArrayList;
@@ -64,29 +70,62 @@ public class ChatFragment extends Fragment {
 
     private void readUsers(){
         mStore.collection("Usuarios")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .document(mUser.getEmail())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.isSuccessful()){
-                            mUsers.clear();
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                User user = documentSnapshot.toObject(User.class);
-                                assert user != null;
-                                assert mUser != null;
-                                if(!user.getCorreo().equals(mUser.getEmail())){
-                                    mUsers.add(user);
-                                }
-                                userAdapter = new UserAdapter(getContext(), mUsers);
-                                recyclerView.setAdapter(userAdapter);
-                            }
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            User user3 = documentSnapshot.toObject(User.class);
+                            mStore.collection("Administrador")
+                                    .document(user3.getCorreoPadre())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DocumentSnapshot documentSnapshot1 = task.getResult();
+                                                if(documentSnapshot1.exists()){
+                                                    User user4 = documentSnapshot1.toObject(User.class);
+                                                    mStore.collection("Administrador")
+                                                            .document(user4.getCorreo())
+                                                            .collection("Usuarios")
+                                                            .get()
+                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if(task.isSuccessful()){
+                                                                        mUsers.clear();
+                                                                        mUsers.add(user4);
+                                                                        for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                                                            User user = documentSnapshot.toObject(User.class);
+                                                                            assert user != null;
+                                                                            assert mUser != null;
+                                                                            if(!user.getCorreo().equals(mUser.getEmail())){
+                                                                                mUsers.add(user);
+                                                                            }
+                                                                            userAdapter = new UserAdapter(getContext(), mUsers);
+                                                                            recyclerView.setAdapter(userAdapter);
+                                                                        }
+
+                                                                    }else{
+                                                                        Toast.makeText(getContext(), task.getException().getMessage(),
+                                                                                Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });;
+                                                }else{
+                                                }
+                                            }else{
+                                            }
+                                        }
+                                    });
                         }else{
-                            Toast.makeText(getContext(), task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
     }
 
 }

@@ -22,12 +22,12 @@ import com.ssd.appssd.objects.User;
 
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
+public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
 
     private final long ONE_MEGABYTE = 1024 * 1024;
-    public UserAdapter(Context mContext, List<User> mUsers) {
+    public AdminAdapter(Context mContext, List<User> mUsers) {
         this.mUsers = mUsers;
         this.mContext = mContext;
     }
@@ -36,7 +36,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false);
-        return new UserAdapter.ViewHolder(view);
+        return new AdminAdapter.ViewHolder(view);
     }
 
     @Override
@@ -68,7 +68,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
     }
-
 
     @Override
     public int getItemCount() {

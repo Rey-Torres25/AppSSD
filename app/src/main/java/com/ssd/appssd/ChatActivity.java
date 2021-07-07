@@ -36,6 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.components.ComponentMessage;
+import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.Message;
 import com.ssd.appssd.objects.User;
 import com.ssd.appssd.objects.Chat;
@@ -118,19 +119,49 @@ public class ChatActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        User user = task.getResult().toObject(User.class);
-                        username.setText(user.getNombre());
-                        if(user.getImageURL().equals("default")){
-                            profile_image.setImageResource(R.drawable.perfil_without);
-                        }else{
-                            storageReference = fStorage.getReference().child("images/"+user.getCorreo()+"/profile_picture");
-                            storageReference.getBytes(ONE_MEGABYTE)
-                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                        @Override
-                                        public void onSuccess(byte[] bytes) {
-                                            Glide.with(ChatActivity.this)
-                                                    .load(bytes)
-                                                    .into(profile_image);
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot.exists()){
+                            User user = task.getResult().toObject(User.class);
+                            username.setText(user.getNombre());
+                            if(user.getImageURL().equals("default")){
+                                profile_image.setImageResource(R.drawable.perfil_without);
+                            }else{
+                                storageReference = fStorage.getReference().child("images/"+user.getCorreo()+"/profile_picture");
+                                storageReference.getBytes(ONE_MEGABYTE)
+                                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                            @Override
+                                            public void onSuccess(byte[] bytes) {
+                                                Glide.with(ChatActivity.this)
+                                                        .load(bytes)
+                                                        .into(profile_image);
+                                            }
+                                        });
+                            }
+                        }else {
+                            fStore.collection("Administrador")
+                                    .document(userCorreo)
+                                    .get()
+                                    .addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            DocumentSnapshot documentSnapshot1 = task2.getResult();
+                                            if (documentSnapshot1.exists()) {
+                                                Admin admin = task2.getResult().toObject(Admin.class);
+                                                username.setText(admin.getNombre());
+                                                if (admin.getImageURL().equals("default")) {
+                                                    profile_image.setImageResource(R.drawable.perfil_without);
+                                                } else {
+                                                    storageReference = fStorage.getReference().child("images/" + admin.getCorreo() + "/profile_picture");
+                                                    storageReference.getBytes(ONE_MEGABYTE)
+                                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                @Override
+                                                                public void onSuccess(byte[] bytes) {
+                                                                    Glide.with(ChatActivity.this)
+                                                                            .load(bytes)
+                                                                            .into(profile_image);
+                                                                }
+                                                            });
+                                                }
+                                            }
                                         }
                                     });
                         }
