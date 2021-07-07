@@ -44,7 +44,7 @@ public class ChatFragmentAdmin extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_chat_admin, container, false);
         // Inflate the layout for this fragment
 
         recyclerView = view.findViewById(R.id.recyclerview);
@@ -65,6 +65,7 @@ public class ChatFragmentAdmin extends Fragment {
 
     private void readUsers(){
         mStore.collection("Usuarios")
+                .whereEqualTo("correoPadre", mUser.getEmail())
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -82,9 +83,6 @@ public class ChatFragmentAdmin extends Fragment {
                                 userAdapter = new UserAdapter(getContext(), mUsers);
                                 recyclerView.setAdapter(userAdapter);
                             }
-                        }else{
-                            Toast.makeText(getContext(), task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

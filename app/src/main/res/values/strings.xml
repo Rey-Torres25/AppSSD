@@ -21,7 +21,6 @@
         <string name="registro_token_correctamente">Se registro su token correctamente.</string>
         <string name="token_no_existe">El token que ingreso no existe, favor de verificarlo.</string>
         <string name="token_en_uso">El token que ingreso ya esta en uso!, favor de ingresar otro.</string>
-        <string name="registrar_token">Registrar Token.</string>
         <!--Parte del Registro-->
 
         <!--Parte de Recupera tu contraseña-->
@@ -50,4 +49,8 @@
                 <item>Administrador</item>
                 <item>Usuario</item>
         </string-array>
+
+        <string name="cancelar_dialog">Cancelar</string>
+        <string name="registrar_usuario">Registrar usuario</string>
+        <string name="registrar_dialog_confirmacion">Registrar</string>
 </resources>

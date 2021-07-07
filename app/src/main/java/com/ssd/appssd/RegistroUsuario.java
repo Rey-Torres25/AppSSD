@@ -1,20 +1,29 @@
 package com.ssd.appssd;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
+import android.content.Intent;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import com.ssd.appssd.objects.Standar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistroUsuario extends AppCompatActivity {
 
@@ -23,6 +32,7 @@ public class RegistroUsuario extends AppCompatActivity {
     private EditText password, password2;
     private Button bRegister;
     private FirebaseAuth mAuth;
+    private String Token = "";
     private FirebaseFirestore mStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +183,6 @@ public class RegistroUsuario extends AppCompatActivity {
     }
 
     public void registerUser(View v){
-
         boolean nameempty = name.getText().toString().isEmpty();
         boolean emailempty = email.getText().toString().isEmpty();
         boolean passwordempty = password.getText().toString().isEmpty();
@@ -192,33 +201,101 @@ public class RegistroUsuario extends AppCompatActivity {
                 password2.setError(getString(R.string.error_vacio_edit_text));
             }
         }else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
+            builder.setTitle("Token");
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setTextColor(getResources().getColor(R.color.white));
+            input.setHint("Ingrese el token...");
+            input.setHintTextColor(getResources().getColor(R.color.color));
+            builder.setView(input);
+            builder.setPositiveButton(getString(R.string.registrar_dialog_confirmacion), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(!input.getText().toString().isEmpty()){
+                        Token = input.getText().toString();
+                        mStore.collection("Tokens")
+                                .document(Token)
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if(documentSnapshot.exists()){
+                                            if(!documentSnapshot.getBoolean("EstaActivado")){
+                                                mAuth.createUserWithEmailAndPassword(email.getText().toString(),
+                                                        password.getText().toString()).addOnCompleteListener(task -> {
+                                                            if(task.isSuccessful()){
+                                                                mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
+                                                                    if (task2.isSuccessful()) {
+                                                                        Map<String, Object> map = new HashMap<>();
+                                                                        map.put("nombre", name.getText().toString());
+                                                                        map.put("correo", email.getText().toString());
+                                                                        map.put("imageURL", "default");
+                                                                        map.put("token", Token);
+                                                                        map.put("timestamp", FieldValue.serverTimestamp());
+                                                                        mStore.collection("Administrador")
+                                                                                .document(email.getText().toString())
+                                                                                .set(map)
+                                                                                .addOnSuccessListener(documentReference1 ->{
+                                                                                   mStore.collection("Tokens")
+                                                                                   .document(Token)
+                                                                                   .update("EstaActivado", true)
+                                                                                   .addOnCompleteListener(task3 ->{
+                                                                                      if(task3.isSuccessful()){
+                                                                                          Toast.makeText(RegistroUsuario.this, "Te has registrado correctamente. Favor de checar tu correo por verificación",
+                                                                                                  Toast.LENGTH_LONG).show();
+                                                                                          mAuth.signOut();
+                                                                                          Intent intent = new Intent(RegistroUsuario.this, MainActivity.class);
+                                                                                          startActivity(intent);
+                                                                                          finish();                                                                                     }else{
+                                                                                          Toast.makeText(RegistroUsuario.this, task3.getException().getMessage(),
+                                                                                                  Toast.LENGTH_LONG).show();
+                                                                                      }
+                                                                                   });
+                                                                                });
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                            }else{
+                                                Toast.makeText(RegistroUsuario.this, getString(R.string.token_en_uso),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }else{
+                                            Toast.makeText(RegistroUsuario.this, getString(R.string.token_no_existe),
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                    }
+                }
+            });
+            builder.setNegativeButton(getString(R.string.cancelar_dialog), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            input.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            mAuth.createUserWithEmailAndPassword(email.getText().toString(),
-                    password.getText().toString()).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()){
-                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task12 -> {
-                                if(task12.isSuccessful()){
-                                    Standar user = new Standar(name.getText().toString(), email.getText().toString(), "", "", "");
-                                    mStore.collection("UsuarioEstandar")
-                                            .document(email.getText().toString())
-                                            .set(user)
-                                            .addOnCompleteListener(task1 -> {
-                                                if(task1.isSuccessful()){
-                                                    Toast.makeText(RegistroUsuario.this, "Te has registrado correctamente. Favor de checar tu correo por verificación",
-                                                            Toast.LENGTH_LONG).show();
-                                                    mAuth.signOut();
-                                                }else{
-                                                    Toast.makeText(RegistroUsuario.this, task1.getException().getMessage(),
-                                                            Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-                                }else{
-                                    Toast.makeText(RegistroUsuario.this, task12.getException().getMessage(),
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    });
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(input.getText().toString().isEmpty()){
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    }
+                }
+            });
         }
     }
 

@@ -2,13 +2,13 @@ package com.ssd.appssd.objects;
 
 public class User {
 
-    private String nombre, correo, imageURL, token;
+    private String nombre, correo, imageURL, correoPadre;
 
-    public User(String nombre, String correo, String imageURL, String token) {
+    public User(String nombre, String correo, String imageURL, String correoPadre) {
         this.nombre = nombre;
         this.correo = correo;
         this.imageURL = imageURL;
-        this.token = token;
+        this.correoPadre = correoPadre;
     }
 
     public User(){
@@ -39,11 +39,11 @@ public class User {
         this.imageURL = imageURL;
     }
 
-    public String getToken() {
-        return token;
+    public String getCorreoPadre() {
+        return correoPadre;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setCorreoPadre(String correoPadre) {
+        this.correoPadre = correoPadre;
     }
 }

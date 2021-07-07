@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import com.ssd.appssd.fragmentsAdmin.RecordsFragmentAdmin;
 import com.ssd.appssd.fragmentsUsuario.ChatFragment;
 import com.ssd.appssd.fragmentsUsuario.PerfilFragment;
 import com.ssd.appssd.fragmentsUsuario.RecordsFragment;
@@ -27,7 +28,11 @@ public class MenuUsuario extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        showSelectedFragment(new RecordsFragment());
+        if(bottomNavigationView.getSelectedItemId() == R.id.registros) {
+            bottomNavigationView.setSelectedItemId(R.id.registros);
+            showSelectedFragment(new RecordsFragmentAdmin());
+            getSupportActionBar().setTitle("Registros");
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

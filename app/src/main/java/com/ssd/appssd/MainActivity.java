@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,29 +28,28 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.ssd.appssd.objects.User;
 
-import java.lang.reflect.Array;
 import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
 
     //atributos de tipo privado
-    private EditText mEditTextEmail;
+    private EditText mEditTextEmail, password, confirm_password;
     private EditText mEditTextPassword;
     private Button bLogin;
     private FirebaseUser mUser;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
     private Spinner spinner;
+
     TextView forgotPassword;
 
     @Override
@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             Intent admin = new Intent(MainActivity.this, MenuAdmin.class);
                             startActivity(admin);
-                        } else {
-                            mStore.collection("UsuarioEstandar").
+                            finish();
+                        }else{
+                            mStore.collection("Usuarios").
                                     document(mUser.getEmail()).
                                     get().addOnSuccessListener(documentSnapshot1 -> {
                                         if(documentSnapshot1.exists()) {
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                                     Toast.LENGTH_SHORT).show();
                                             Intent userEs = new Intent(MainActivity.this, MenuUsuario.class);
                                             startActivity(userEs);
+                                            finish();
                                         }
                                     });
                         }
@@ -225,45 +227,134 @@ public class MainActivity extends AppCompatActivity {
             if(passwordEmpty) {
                 mEditTextPassword.setError(getString(R.string.error_vacio_edit_text));
             }
-        } else {
-            mAuth.signInWithEmailAndPassword(mEditTextEmail.getText().toString(),
-                    mEditTextPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        if(mAuth.getCurrentUser().isEmailVerified()){
-                            int item = spinner.getSelectedItemPosition();
-                            if(item == 0) {
-                                iniciarSesionDataBase(MenuAdmin.class,"Administrador");
-                            } else {
-                                iniciarSesionDataBase(MenuUsuario.class, "UsuarioEstandar");
-                            }
-
-                        }else{
-                            Toast.makeText(MainActivity.this, "Su correo no ha sido verificado, favor de verificar.",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }else{
-                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+        }else{
+            int item = spinner.getSelectedItemPosition();
+            if(item == 0) {
+                iniciarSesionDataBase(MenuAdmin.class,"Administrador");
+            }else{
+                iniciarSesionDataBase(MenuUsuario.class, "Usuarios");
+            }
         }
-
     }
 
     private void iniciarSesionDataBase(Class clase, String collection) {
         mStore.collection(collection)
-                .document(mAuth.getCurrentUser().getEmail())
+                .document(mEditTextEmail.getText().toString())
                 .get()
                 .addOnCompleteListener(task -> {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if(documentSnapshot.exists()){
-                        Intent intent = new Intent(MainActivity.this, clase);
-                        Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
-                                Toast.LENGTH_SHORT).show();
-                        startActivity(intent);
-                        finish();
+                        mAuth.signInWithEmailAndPassword(mEditTextEmail.getText().toString(),
+                                mEditTextPassword.getText().toString())
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()){
+                                            if(mAuth.getCurrentUser().isEmailVerified()){
+                                                Intent intent = new Intent(MainActivity.this, clase);
+                                                Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                startActivity(intent);
+                                                finish();
+                                            }else{
+                                                Toast.makeText(MainActivity.this, "Su correo no ha sido verificado, favor de verificar.",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }else{
+                                        }
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                LayoutInflater inflater = getLayoutInflater();
+                                View dialogView = inflater.inflate(R.layout.dialog_confirmar_password_usuario, null);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomAlertDialog);
+                                builder.setTitle(getString(R.string.confirmar_contrasena));
+                                builder.setView(dialogView);
+                                password = (EditText) dialogView.findViewById(R.id.password);
+                                password.setText(mEditTextPassword.getText().toString());
+                                confirm_password = (EditText) dialogView.findViewById(R.id.confirm_password);
+                                builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mAuth.createUserWithEmailAndPassword(mEditTextEmail.getText().toString(), password.getText().toString())
+                                                .addOnCompleteListener(task ->{
+                                                    if(task.isSuccessful()){
+                                                        mAuth.getCurrentUser().sendEmailVerification()
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if(task.isSuccessful()){
+                                                                            Toast.makeText(MainActivity.this, "Se ha enviado un correo de confirmación. Favor de confirmar",
+                                                                                    Toast.LENGTH_SHORT).show();
+                                                                        }else{
+                                                                            Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                                                                                    Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                    }
+                                });
+                                builder.setNegativeButton(getString(R.string.cancelar_dialog), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                password.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        if(!confirm_password.getText().toString().isEmpty()){
+                                            if(confirm_password.getText().toString().equals(password.getText().toString())) {
+                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                                confirm_password.setError(null);
+                                            }else{
+                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                confirm_password.setError(getString(R.string.no_coinciden));
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        if(password.getText().toString().isEmpty()){
+                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                        }
+                                    }
+                                });
+                                confirm_password.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        if(!password.getText().toString().isEmpty()){
+                                            if(confirm_password.getText().toString().equals(password.getText().toString())) {
+                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                                confirm_password.setError(null);
+                                            }else{
+                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                confirm_password.setError(getString(R.string.no_coinciden));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        if(confirm_password.getText().toString().isEmpty()) {
+                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     }else{
                         Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
                                 Toast.LENGTH_SHORT).show();

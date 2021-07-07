@@ -1,25 +1,54 @@
 package com.ssd.appssd.objects;
 
-import java.util.ArrayList;
 
-public class Admin extends User {
+public class Admin{
 
-    private ArrayList<String> hijos;
+    private String nombre, correo, imageURL, token;
+
+
+    public Admin(String nombre, String correo, String imageURL, String token) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.imageURL = imageURL;
+        this.token = token;
+    }
+
 
     public Admin() {
 
     }
 
-    public Admin(String nombre, String correo, String url, String token ,ArrayList<String> hijos) {
-        super(nombre, correo, url, token);
-        this.hijos = hijos;
+    public String getNombre() {
+        return nombre;
     }
 
-    public ArrayList<String> getHijos() {
-        return hijos;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setHijos(ArrayList<String> hijos) {
-        this.hijos = hijos;
+    public String getCorreo() {
+        return correo;
     }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 }

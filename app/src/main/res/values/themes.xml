@@ -9,4 +9,8 @@
         <item name="titleTextColor">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@color/border_grey</item>
+    </style>
 </resources>
