@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -221,4 +224,19 @@ public class ChatActivity extends AppCompatActivity {
         scrollView.postDelayed(paginar, 100);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.video_call_menu, menu);
+        return true;
+    }
+
+
+    //Método al clickear ícono de video llamada
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }

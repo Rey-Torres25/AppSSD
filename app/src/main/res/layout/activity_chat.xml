@@ -13,6 +13,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -29,13 +30,6 @@
                 android:layout_marginLeft="25dp"
                 />
 
-            <ImageButton
-                android:id="@+id/video"
-                android:background="@android:color/transparent"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
         </androidx.appcompat.widget.Toolbar>
 

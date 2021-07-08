@@ -49,7 +49,7 @@
                 <item>Administrador</item>
                 <item>Usuario</item>
         </string-array>
-
+        <string name="video_call">Video llamada</string>
         <string name="cancelar_dialog">Cancelar</string>
         <string name="registrar_usuario">Registrar usuario</string>
         <string name="registrar_dialog_confirmacion">Registrar</string>
