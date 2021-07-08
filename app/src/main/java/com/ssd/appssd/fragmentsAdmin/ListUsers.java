@@ -87,8 +87,9 @@ public class ListUsers extends Fragment {
     }
 
     private void readUsers(){
-        CollectionReference collectionReference = mStore.collection("Usuarios");
-        collectionReference.whereEqualTo("correoPadre", mUser.getEmail())
+        mStore.collection("Administrador")
+                .document(mUser.getEmail())
+                .collection("Usuarios")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -103,7 +104,7 @@ public class ListUsers extends Fragment {
                                     mUsers.add(user);
                                 }
                             }
-                            userAdapter = new ListAdapter(getContext(), mUsers);
+                            userAdapter = new ListAdapter(getContext(), mUsers, getActivity());
                             recyclerView.setAdapter(userAdapter);
                         }
                     }
@@ -136,31 +137,19 @@ public class ListUsers extends Fragment {
                         map.put("imageURL", "default");
                         map.put("correoPadre", mUser.getEmail());
                         map.put("timestamp", FieldValue.serverTimestamp());
-                        mStore.collection("Administrador")
-                                .document(mUser.getEmail())
-                                .collection("Usuarios")
+                        mStore.collection("Usuarios")
                                 .document(correo.getText().toString())
                                 .set(map)
-                                .addOnCompleteListener(task -> {
-                                    if(task.isSuccessful()){
-                                        mStore.collection("Usuarios")
-                                                .document(correo.getText().toString())
-                                                .set(map)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Toast.makeText(getContext(), "Has registrado correctamente al usuario",
-                                                                Toast.LENGTH_LONG).show();
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getContext(), "Hubo un error con el registro",
-                                                        Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-                                    }else{
-                                        Toast.makeText(getContext(), task.getException().getMessage(),
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(getContext(), "Has registrado correctamente al usuario",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Hubo un error con el registro",
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 });

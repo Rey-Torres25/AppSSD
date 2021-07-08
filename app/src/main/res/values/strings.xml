@@ -53,4 +53,6 @@
         <string name="cancelar_dialog">Cancelar</string>
         <string name="registrar_usuario">Registrar usuario</string>
         <string name="registrar_dialog_confirmacion">Registrar</string>
+        <string name="eliminar_usuario">Eliminar</string>
+        <string name="confirmar_eliminar">¿Desea eliminar el usuario seleccinonado?</string>
 </resources>

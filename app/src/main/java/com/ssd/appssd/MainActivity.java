@@ -29,14 +29,21 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.ssd.appssd.objects.User;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         mStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-
         if(mUser != null){
             mStore.collection("Administrador")
                     .document(mUser.getEmail())
@@ -251,113 +257,212 @@ public class MainActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if(task.isSuccessful()){
                                             if(mAuth.getCurrentUser().isEmailVerified()){
-                                                Intent intent = new Intent(MainActivity.this, clase);
-                                                Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
-                                                        Toast.LENGTH_SHORT).show();
-                                                startActivity(intent);
-                                                finish();
+                                                mStore.collection("Usuarios")
+                                                        .document(mAuth.getCurrentUser().getEmail())
+                                                        .get()
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                if(documentSnapshot.exists()){
+                                                                    User user1 = documentSnapshot.toObject(User.class);
+                                                                    mStore.collection("Administrador")
+                                                                            .document(user1.getCorreoPadre())
+                                                                            .collection("Usuarios")
+                                                                            .document(user1.getCorreo())
+                                                                            .get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                    if(!documentSnapshot.exists()){
+                                                                                        Map<String, Object> map = new HashMap<>();
+                                                                                        map.put("nombre", user1.getNombre());
+                                                                                        map.put("correo", user1.getCorreo());
+                                                                                        map.put("imageURL", user1.getImageURL());
+                                                                                        map.put("correoPadre", user1.getCorreoPadre());
+                                                                                        map.put("timestamp", FieldValue.serverTimestamp());
+                                                                                        mStore.collection("Administrador")
+                                                                                                .document(user1.getCorreoPadre())
+                                                                                                .collection("Usuarios")
+                                                                                                .document(user1.getCorreo())
+                                                                                                .set(map)
+                                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                    @Override
+                                                                                                    public void onSuccess(Void unused) {
+                                                                                                        Intent intent = new Intent(MainActivity.this, clase);
+                                                                                                        Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                                        startActivity(intent);
+                                                                                                        finish();
+                                                                                                    }
+                                                                                                });
+                                                                                    }else{
+                                                                                        Intent intent = new Intent(MainActivity.this, clase);
+                                                                                        Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                        startActivity(intent);
+                                                                                        finish();
+                                                                                    }
+                                                                                }
+                                                                            });
+
+                                                                }else{
+                                                                    mStore.collection("Administrador")
+                                                                            .document(mAuth.getCurrentUser().getEmail())
+                                                                            .get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                    if(!documentSnapshot.exists()){
+                                                                                        mAuth.getCurrentUser().delete();
+                                                                                        Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                    }else{
+                                                                                        Intent intent = new Intent(MainActivity.this, clase);
+                                                                                        Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                        startActivity(intent);
+                                                                                        finish();
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        });
                                             }else{
                                                 Toast.makeText(MainActivity.this, "Su correo no ha sido verificado, favor de verificar.",
                                                         Toast.LENGTH_LONG).show();
                                             }
                                         }else{
-                                        }
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                LayoutInflater inflater = getLayoutInflater();
-                                View dialogView = inflater.inflate(R.layout.dialog_confirmar_password_usuario, null);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomAlertDialog);
-                                builder.setTitle(getString(R.string.confirmar_contrasena));
-                                builder.setView(dialogView);
-                                password = (EditText) dialogView.findViewById(R.id.password);
-                                password.setText(mEditTextPassword.getText().toString());
-                                confirm_password = (EditText) dialogView.findViewById(R.id.confirm_password);
-                                builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mAuth.createUserWithEmailAndPassword(mEditTextEmail.getText().toString(), password.getText().toString())
-                                                .addOnCompleteListener(task ->{
-                                                    if(task.isSuccessful()){
-                                                        mAuth.getCurrentUser().sendEmailVerification()
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if(task.isSuccessful()){
-                                                                            Toast.makeText(MainActivity.this, "Se ha enviado un correo de confirmación. Favor de confirmar",
-                                                                                    Toast.LENGTH_SHORT).show();
-                                                                        }else{
-                                                                            Toast.makeText(MainActivity.this, task.getException().getMessage(),
-                                                                                    Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                                    }
-                                                                });
+                                            LayoutInflater inflater = getLayoutInflater();
+                                            View dialogView = inflater.inflate(R.layout.dialog_confirmar_password_usuario, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomAlertDialog);
+                                            builder.setTitle(getString(R.string.confirmar_contrasena));
+                                            builder.setView(dialogView);
+                                            password = (EditText) dialogView.findViewById(R.id.password);
+                                            password.setText(mEditTextPassword.getText().toString());
+                                            confirm_password = (EditText) dialogView.findViewById(R.id.confirm_password);
+                                            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    mAuth.createUserWithEmailAndPassword(mEditTextEmail.getText().toString(), password.getText().toString())
+                                                            .addOnCompleteListener(task ->{
+                                                                if(task.isSuccessful()){
+                                                                    mAuth.getCurrentUser().sendEmailVerification()
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    if(task.isSuccessful()){
+                                                                                        Toast.makeText(MainActivity.this, "Se ha enviado un correo de confirmación. Favor de confirmar",
+                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                    }else{
+                                                                                        Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                                                                                                Toast.LENGTH_SHORT).show();
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            });
+                                                }
+                                            });
+                                            builder.setNegativeButton(getString(R.string.cancelar_dialog), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            AlertDialog dialog = builder.create();
+                                            dialog.show();
+                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                            password.addTextChangedListener(new TextWatcher() {
+                                                @Override
+                                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                }
+                                                @Override
+                                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                    if(!confirm_password.getText().toString().isEmpty()){
+                                                        if(confirm_password.getText().toString().equals(password.getText().toString())) {
+                                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                                            confirm_password.setError(null);
+                                                        }else{
+                                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                            confirm_password.setError(getString(R.string.no_coinciden));
+                                                        }
                                                     }
-                                                });
-                                    }
-                                });
-                                builder.setNegativeButton(getString(R.string.cancelar_dialog), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                                password.addTextChangedListener(new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                    }
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        if(!confirm_password.getText().toString().isEmpty()){
-                                            if(confirm_password.getText().toString().equals(password.getText().toString())) {
-                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                                                confirm_password.setError(null);
-                                            }else{
-                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                                                confirm_password.setError(getString(R.string.no_coinciden));
-                                            }
-                                        }
-                                    }
-                                    @Override
-                                    public void afterTextChanged(Editable s) {
-                                        if(password.getText().toString().isEmpty()){
-                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                                        }
-                                    }
-                                });
-                                confirm_password.addTextChangedListener(new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                    }
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        if(!password.getText().toString().isEmpty()){
-                                            if(confirm_password.getText().toString().equals(password.getText().toString())) {
-                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                                                confirm_password.setError(null);
-                                            }else{
-                                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                                                confirm_password.setError(getString(R.string.no_coinciden));
-                                            }
-                                        }
-                                    }
+                                                }
+                                                @Override
+                                                public void afterTextChanged(Editable s) {
+                                                    if(password.getText().toString().isEmpty()){
+                                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                    }
+                                                }
+                                            });
+                                            confirm_password.addTextChangedListener(new TextWatcher() {
+                                                @Override
+                                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                }
+                                                @Override
+                                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                    if(!password.getText().toString().isEmpty()){
+                                                        if(confirm_password.getText().toString().equals(password.getText().toString())) {
+                                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                                            confirm_password.setError(null);
+                                                        }else{
+                                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                            confirm_password.setError(getString(R.string.no_coinciden));
+                                                        }
+                                                    }
+                                                }
 
-                                    @Override
-                                    public void afterTextChanged(Editable s) {
-                                        if(confirm_password.getText().toString().isEmpty()) {
-                                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                @Override
+                                                public void afterTextChanged(Editable s) {
+                                                    if(confirm_password.getText().toString().isEmpty()) {
+                                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                    }
+                                                }
+                                            });
                                         }
                                     }
                                 });
-                            }
-                        });
+
                     }else{
-                        Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
-                                Toast.LENGTH_SHORT).show();
+                        mAuth.signInWithEmailAndPassword(mEditTextEmail.getText().toString(), mEditTextPassword.getText().toString())
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()){
+                                            mStore.collection("Administrador")
+                                                    .document(mAuth.getCurrentUser().getEmail())
+                                                    .get()
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                            if(!documentSnapshot.exists()){
+                                                                mStore.collection("Usuarios")
+                                                                        .document(mAuth.getCurrentUser().getEmail())
+                                                                        .get()
+                                                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                            @Override
+                                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                if(!documentSnapshot.exists()){
+                                                                                    mAuth.getCurrentUser().delete();
+                                                                                    Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                                                                            Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            }
+                                                                        });
+                                                            }else{
+                                                                Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        }else{
+                                            Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                     }
                 });
     }

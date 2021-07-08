@@ -5,21 +5,20 @@
     android:padding="16dp">
 
     <EditText
+        android:id="@+id/nombre"
+        android:hint="@string/nombre"
         android:textColor="@color/white"
         android:textColorHint="@color/color"
-        android:id="@+id/nombre"
-        android:inputType="textPersonName"
-        android:hint="@string/nombre"
         android:layout_width="match_parent"
+        android:inputType="textPersonName"
         android:layout_height="wrap_content"/>
     <EditText
-        android:textColor="@color/white"
-        android:textColorHint="@color/color"
         android:id="@+id/correo"
+        android:textColor="@color/white"
         android:hint="@string/correo_electronico"
-        android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/color"
         android:layout_below="@id/nombre"/>
-
 </RelativeLayout>

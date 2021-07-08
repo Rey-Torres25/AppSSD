@@ -21,7 +21,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
-import com.ssd.appssd.adapter.AdminAdapter;
 import com.ssd.appssd.adapter.UserAdapter;
 import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
@@ -33,7 +32,7 @@ public class ChatFragmentAdmin extends Fragment {
 
 
     private RecyclerView recyclerView;
-    private AdminAdapter userAdapter;
+    private UserAdapter userAdapter;
     private List<User> mUsers;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
@@ -66,8 +65,9 @@ public class ChatFragmentAdmin extends Fragment {
 
 
     private void readUsers(){
-        mStore.collection("Usuarios")
-                .whereEqualTo("correoPadre", mUser.getEmail())
+        mStore.collection("Administrador")
+                .document(mUser.getEmail())
+                .collection("Usuarios")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -81,7 +81,7 @@ public class ChatFragmentAdmin extends Fragment {
                                 if(!user.getCorreo().equals(mUser.getEmail())){
                                     mUsers.add(user);
                                 }
-                                userAdapter = new AdminAdapter(getContext(), mUsers);
+                                userAdapter = new UserAdapter(getContext(), mUsers);
                                 recyclerView.setAdapter(userAdapter);
                             }
                         }
