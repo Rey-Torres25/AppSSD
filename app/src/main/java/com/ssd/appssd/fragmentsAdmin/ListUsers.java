@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +34,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -57,8 +61,8 @@ public class ListUsers extends Fragment {
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private String id, email;
-    private EditText nombre, correo, password, confirm_password;
+
+    private EditText nombre, correo;
     public ListUsers() {
         // Required empty public constructor
     }
@@ -90,23 +94,23 @@ public class ListUsers extends Fragment {
         mStore.collection("Administrador")
                 .document(mUser.getEmail())
                 .collection("Usuarios")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            mUsers.clear();
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                User user = documentSnapshot.toObject(User.class);
-                                assert user != null;
-                                assert mUser != null;
-                                if(!user.getCorreo().equals(mUser.getEmail())){
-                                    mUsers.add(user);
-                                }
-                            }
-                            userAdapter = new ListAdapter(getContext(), mUsers, getActivity());
-                            recyclerView.setAdapter(userAdapter);
+                    public void onEvent(@Nullable QuerySnapshot value, FirebaseFirestoreException error) {
+                        if(error != null){
+                            Log.w("TAG", "Listen failed.", error);
+                            return;
                         }
+                        mUsers.clear();
+                        for(QueryDocumentSnapshot documentSnapshot : value){
+                            if(documentSnapshot.exists()){
+                                User user = documentSnapshot.toObject(User.class);
+                                mUsers.add(user);
+                            }
+                        }
+                        userAdapter = new ListAdapter(getContext(), mUsers, getActivity());
+                        recyclerView.setAdapter(userAdapter);
                     }
                 });
     }
@@ -164,7 +168,7 @@ public class ListUsers extends Fragment {
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
                     nombre.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

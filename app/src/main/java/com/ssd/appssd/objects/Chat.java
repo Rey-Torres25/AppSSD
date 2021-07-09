@@ -6,8 +6,10 @@ public class Chat {
 
     private ArrayList<String> usuarios;
 
+
     public Chat(ArrayList<String> usuarios) {
         this.usuarios = usuarios;
+
     }
 
     public Chat() {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,13 +23,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
+import com.ssd.appssd.adapter.GrupoAdapter;
 import com.ssd.appssd.adapter.UserAdapter;
 import com.ssd.appssd.objects.Admin;
+import com.ssd.appssd.objects.Grupo;
 import com.ssd.appssd.objects.User;
 
 import java.util.ArrayList;
@@ -36,8 +41,10 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, recyclerViewGrupo;
     private UserAdapter userAdapter;
+    private GrupoAdapter grupoAdapter;
+    private List<Grupo> mGrupos;
     private List<User> mUsers;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
@@ -57,15 +64,44 @@ public class ChatFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recyclerViewGrupo = view.findViewById(R.id.recyclerviewgrupos);
+        recyclerViewGrupo.setHasFixedSize(true);
+        recyclerViewGrupo.setLayoutManager(new LinearLayoutManager(getContext()));
+
         mStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         mUsers = new ArrayList<>();
+        mGrupos = new ArrayList<>();
 
+        readGrupos();
         readUsers();
 
         return view;
+    }
+
+    private void readGrupos(){
+        mStore.collection("Grupos")
+                .whereArrayContains("usuarios", mUser.getEmail())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, FirebaseFirestoreException error) {
+                        if(error != null){
+                            Log.w("TAG", "Listen failed.", error);
+                            return;
+                        }
+                        mGrupos.clear();
+                        for(QueryDocumentSnapshot documentSnapshot : value){
+                            if(documentSnapshot.exists()){
+                                Grupo grupo = documentSnapshot.toObject(Grupo.class);
+                                mGrupos.add(grupo);
+                            }
+                        }
+                        grupoAdapter = new GrupoAdapter(getContext(), mGrupos);
+                        recyclerViewGrupo.setAdapter(grupoAdapter);
+                    }
+                });
     }
 
     private void readUsers(){
@@ -91,30 +127,28 @@ public class ChatFragment extends Fragment {
                                                     mStore.collection("Administrador")
                                                             .document(user4.getCorreo())
                                                             .collection("Usuarios")
-                                                            .get()
-                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            .orderBy("timestamp", Query.Direction.ASCENDING)
+                                                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                    if(task.isSuccessful()){
-                                                                        mUsers.clear();
-                                                                        mUsers.add(user4);
-                                                                        for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                                                public void onEvent(@Nullable QuerySnapshot value, FirebaseFirestoreException error) {
+                                                                    if(error != null){
+                                                                        Log.w("TAG", "Listen failed.", error);
+                                                                        return;
+                                                                    }
+                                                                    mUsers.clear();
+                                                                    mUsers.add(user4);
+                                                                    for(QueryDocumentSnapshot documentSnapshot : value){
+                                                                        if(documentSnapshot.exists()){
                                                                             User user = documentSnapshot.toObject(User.class);
-                                                                            assert user != null;
-                                                                            assert mUser != null;
                                                                             if(!user.getCorreo().equals(mUser.getEmail())){
                                                                                 mUsers.add(user);
                                                                             }
-                                                                            userAdapter = new UserAdapter(getContext(), mUsers);
-                                                                            recyclerView.setAdapter(userAdapter);
                                                                         }
-
-                                                                    }else{
-                                                                        Toast.makeText(getContext(), task.getException().getMessage(),
-                                                                                Toast.LENGTH_SHORT).show();
                                                                     }
+                                                                    userAdapter = new UserAdapter(getContext(), mUsers);
+                                                                    recyclerView.setAdapter(userAdapter);
                                                                 }
-                                                            });;
+                                                            });
                                                 }else{
                                                 }
                                             }else{

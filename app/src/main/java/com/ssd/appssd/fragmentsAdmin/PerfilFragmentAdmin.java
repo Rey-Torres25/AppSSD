@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.MainActivity;
 import com.ssd.appssd.R;
@@ -80,12 +81,12 @@ public class PerfilFragmentAdmin extends Fragment {
                         if(!user.getImageURL().equals("default")){
                             storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
                             storageReference
-                                    .getBytes(ONE_MEGABYTE)
-                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    .getDownloadUrl()
+                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
-                                        public void onSuccess(byte[] bytes) {
-                                            Glide.with(getActivity())
-                                                    .load(bytes)
+                                        public void onSuccess(Uri uri) {
+                                            Picasso.with(getActivity())
+                                                    .load(uri)
                                                     .into(photo);
                                         }
                                     });

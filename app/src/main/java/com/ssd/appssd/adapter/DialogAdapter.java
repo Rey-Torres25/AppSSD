@@ -1,43 +1,49 @@
 package com.ssd.appssd.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.R;
-import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
-    private Context mContext;
-    private List<User> mUsers;
+public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder> {
 
-    public UserAdapter(Context mContext, List<User> mUsers) {
+    private Context mContext;
+    private ArrayList<String> userSaved = new ArrayList<>();
+    private List<User> mUsers;
+    DialogListener dialogListener;
+
+    public DialogAdapter(Context mContext, List<User> mUsers, DialogListener dialogListener) {
         this.mUsers = mUsers;
         this.mContext = mContext;
+        this.dialogListener = dialogListener;
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false);
-        return new UserAdapter.ViewHolder(view);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.user_item_dialog, parent, false);
+        return new DialogAdapter.ViewHolder(view);
     }
 
     @Override
@@ -63,11 +69,35 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.putExtra("correo", user.getCorreo());
-                mContext.startActivity(intent);
+                if(holder.checkBox.isChecked()){
+                    holder.checkBox.setChecked(false);
+                    for(int i=0; i<userSaved.size();i++){
+                        if(userSaved.get(i).equals(user.getCorreo()))
+                            userSaved.remove(i);
+                    }
+                }else{
+                    holder.checkBox.setChecked(true);
+                    userSaved.add(user.getCorreo());
+                }
+                dialogListener.onDialogChange(userSaved);
             }
         });
+
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.checkBox.isChecked()){
+                    userSaved.add(user.getCorreo());
+                }else{
+                    for(int i=0; i<userSaved.size();i++){
+                        if(userSaved.get(i).equals(user.getCorreo()))
+                            userSaved.remove(i);
+                    }
+                }
+                dialogListener.onDialogChange(userSaved);
+            }
+        });
+
     }
 
 
@@ -80,10 +110,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         public TextView username;
         public ImageView profile_image;
-
+        public CheckBox checkBox;
         public ViewHolder(View itemView) {
             super(itemView);
 
+            checkBox = itemView.findViewById(R.id.check);
             username = itemView.findViewById(R.id.username);
             profile_image = itemView.findViewById(R.id.profile_image);
         }

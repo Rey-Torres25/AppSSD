@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.ssd.appssd.MainActivity;
 
 import com.ssd.appssd.R;
@@ -83,12 +84,12 @@ public class PerfilFragment extends Fragment {
                     if(!user.getImageURL().equals("default")){
                         storageReference = storageReference.child("images/"+user.getCorreo()+"/profile_picture");
                         storageReference
-                                .getBytes(ONE_MEGABYTE)
-                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                .getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        Glide.with(getActivity())
-                                                .load(bytes)
+                                    public void onSuccess(Uri uri) {
+                                        Picasso.with(getActivity())
+                                                .load(uri)
                                                 .into(photo);
                                     }
                                 });
@@ -125,10 +126,20 @@ public class PerfilFragment extends Fragment {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(getActivity(), "Tu imagen se ha subido correctamente",
-                                                Toast.LENGTH_SHORT).show();
-                                        btnUpload.setVisibility(View.INVISIBLE);
-                                        btnUpload.setEnabled(false);
+                                        DocumentReference documentReference2 = mStore.collection("Administrador")
+                                                .document(user.getCorreoPadre())
+                                                .collection("Usuarios")
+                                                .document(user.getCorreo());
+                                        documentReference2.update("imageURL", storage.toString())
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Toast.makeText(getActivity(), "Tu imagen se ha subido correctamente",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        btnUpload.setVisibility(View.INVISIBLE);
+                                                        btnUpload.setEnabled(false);
+                                                    }
+                                                });
                                     }
                                 });
                     }
@@ -169,8 +180,6 @@ public class PerfilFragment extends Fragment {
             photo.setImageURI(path);
             btnUpload.setVisibility(View.VISIBLE);
             btnUpload.setEnabled(true);
-
-
         }
     }
 

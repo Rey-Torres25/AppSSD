@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +25,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.R;
 import com.ssd.appssd.objects.Admin;
+import com.ssd.appssd.objects.Grupo;
 import com.ssd.appssd.objects.User;
 
 import java.util.List;
@@ -40,7 +44,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Activity mActivity;
     private List<User> mUsers;
 
-    private final long ONE_MEGABYTE = 1024 * 1024;
     public ListAdapter(Context mContext, List<User> mUsers, Activity mActivity) {
         this.mUsers = mUsers;
         this.mContext = mContext;
@@ -63,12 +66,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }else{
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
             StorageReference storageReference = firebaseStorage.getReference().child("images/"+user.getCorreo()+"/profile_picture");
-            storageReference.getBytes(ONE_MEGABYTE)
-                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            storageReference.getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(byte[] bytes) {
-                            Glide.with(mContext)
-                                    .load(bytes)
+                        public void onSuccess(Uri uri) {
+                            Picasso.with(mContext)
+                                    .load(uri)
                                     .into(holder.profile_image);
                         }
                     });
@@ -85,7 +88,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                         FirebaseFirestore mStore = FirebaseFirestore.getInstance();
                         FirebaseAuth mAuth = FirebaseAuth.getInstance();
                         FirebaseUser mUser = mAuth.getCurrentUser();
-
                         mStore.collection("Usuarios")
                                 .document(user.getCorreo())
                                 .delete()
@@ -115,6 +117,45 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                            @Override
                                                                                            public void onSuccess(Void unused) {
+                                                                                               mStore.collection("Grupos")
+                                                                                                       .whereArrayContains("usuarios", user.getCorreo())
+                                                                                                       .get()
+                                                                                                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                           @Override
+                                                                                                           public void onComplete(@NonNull Task<QuerySnapshot> task){
+                                                                                                               if(task.isSuccessful()){
+                                                                                                                   for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                                                                                                       Grupo grupo = documentSnapshot.toObject(Grupo.class);
+                                                                                                                       List<String> list = grupo.getUsuarios();
+                                                                                                                       for(int i=0; i<list.size();i++){
+                                                                                                                           if(list.get(i).equals(user.getCorreo()))
+                                                                                                                              list.remove(i);
+                                                                                                                       }
+                                                                                                                       mStore.collection("Grupos")
+                                                                                                                               .document(documentSnapshot.getId())
+                                                                                                                               .collection("TODO")
+                                                                                                                               .whereEqualTo("sender", user.getCorreo())
+                                                                                                                               .get()
+                                                                                                                               .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                                                   @Override
+                                                                                                                                   public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                                                                       for(QueryDocumentSnapshot documentSnapshot4 : task.getResult()){
+                                                                                                                                           mStore.collection("Grupos")
+                                                                                                                                                   .document(documentSnapshot.getId())
+                                                                                                                                                   .collection("TODO")
+                                                                                                                                                   .document(documentSnapshot4.getId())
+                                                                                                                                                   .delete();
+                                                                                                                                       }
+                                                                                                                                   }
+                                                                                                                               });
+                                                                                                                       mStore.collection("Grupos")
+                                                                                                                               .document(documentSnapshot.getId())
+                                                                                                                               .update("usuarios", list);
+
+                                                                                                                   }
+                                                                                                               }
+                                                                                                           }
+                                                                                                       });
                                                                                            }
                                                                                        });
                                                                            }

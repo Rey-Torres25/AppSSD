@@ -360,6 +360,9 @@ public class MainActivity extends AppCompatActivity {
                                                                                     }
                                                                                 }
                                                                             });
+                                                                }else{
+                                                                    Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                                                                            Toast.LENGTH_SHORT).show();
                                                                 }
                                                             });
                                                 }
@@ -445,6 +448,9 @@ public class MainActivity extends AppCompatActivity {
                                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                                 if(!documentSnapshot.exists()){
                                                                                     mAuth.getCurrentUser().delete();
+                                                                                    Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
+                                                                                            Toast.LENGTH_SHORT).show();
+                                                                                }else{
                                                                                     Toast.makeText(MainActivity.this, getString(R.string.no_existe_usuario),
                                                                                             Toast.LENGTH_SHORT).show();
                                                                                 }
