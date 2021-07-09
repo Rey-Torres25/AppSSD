@@ -44,7 +44,7 @@ public class ChatFragment extends Fragment {
     private RecyclerView recyclerView, recyclerViewGrupo;
     private UserAdapter userAdapter;
     private GrupoAdapter grupoAdapter;
-    private List<Grupo> mGrupos;
+    private ArrayList<Grupo> mGrupos;
     private List<User> mUsers;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;

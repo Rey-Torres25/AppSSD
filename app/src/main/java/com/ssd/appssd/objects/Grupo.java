@@ -1,14 +1,15 @@
 package com.ssd.appssd.objects;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Grupo {
 
-    private List<String> usuarios;
+    private ArrayList<String> usuarios;
     private String nombre, id;
 
-    public Grupo(List<String> usuarios, String nombre, String id) {
+    public Grupo(ArrayList<String> usuarios, String nombre, String id) {
         this.usuarios = usuarios;
         this.nombre = nombre;
         this.id = id;
@@ -18,7 +19,7 @@ public class Grupo {
 
     }
 
-    public List<String> getUsuarios() {
+    public ArrayList<String> getUsuarios() {
         return usuarios;
     }
 

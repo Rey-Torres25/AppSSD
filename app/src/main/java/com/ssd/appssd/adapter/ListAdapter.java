@@ -151,7 +151,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                                                                                                        mStore.collection("Grupos")
                                                                                                                                .document(documentSnapshot.getId())
                                                                                                                                .update("usuarios", list);
-
                                                                                                                    }
                                                                                                                }
                                                                                                            }

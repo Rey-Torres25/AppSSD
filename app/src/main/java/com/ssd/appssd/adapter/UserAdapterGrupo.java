@@ -1,6 +1,5 @@
 package com.ssd.appssd.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,36 +12,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.R;
-import com.ssd.appssd.objects.Admin;
 import com.ssd.appssd.objects.User;
 
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
+public class UserAdapterGrupo extends RecyclerView.Adapter<UserAdapterGrupo.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
+    UserGrupoListener userGrupoListener;
 
-    public UserAdapter(Context mContext, List<User> mUsers) {
+    public UserAdapterGrupo(Context mContext, List<User> mUsers, UserGrupoListener userGrupoListener) {
         this.mUsers = mUsers;
         this.mContext = mContext;
+        this.userGrupoListener = userGrupoListener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserAdapterGrupo.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false);
-        return new UserAdapter.ViewHolder(view);
+        return new UserAdapterGrupo.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserAdapterGrupo.ViewHolder holder, int position) {
         User user = mUsers.get(position);
         holder.username.setText(user.getNombre());
         if(user.getImageURL().equals("default")){
@@ -64,6 +63,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userGrupoListener.onDialogChange(1);
                 Intent intent = new Intent(mContext, ChatActivity.class);
                 intent.putExtra("correo", user.getCorreo());
                 mContext.startActivity(intent);

@@ -50,6 +50,17 @@
         <item>Usuario</item>
     </string-array>
 
+    <string name="eliminar_grupo">Eliminar grupo</string>
+    <string name="eliminado_con_exito">El grupo ha sido eliminado con éxito</string>
+    <string name="confirm_delete_group">¿Desea eliminar el grupo?</string>
+    <string name="see_users">Ver usuarios</string>
+    <string name="no_users_add">No hay usuarios para agregar</string>
+    <string name="no_users_delete">No hay usuarios para eliminar</string>
+    <string name="participante_agregado">Participante agregado con éxito</string>
+    <string name="participante_eliminado">Participante eliminado con éxito</string>
+    <string name="agregar_usuario_dialog">Agregar</string>
+    <string name="agregar_usuario_grupo">Agregar participantes</string>
+    <string name="eliminar_usuario_grupo">Eliminar participantes</string>
     <string name="nombre_grupo">Nombre del grupo</string>
     <string name="option_grupo">Crear</string>
     <string name="grupo">Crear grupo</string>
@@ -59,4 +70,5 @@
     <string name="registrar_dialog_confirmacion">Registrar</string>
     <string name="eliminar_usuario">Eliminar</string>
     <string name="confirmar_eliminar">¿Desea eliminar el usuario seleccinonado?</string>
+    <string name="grupo_creado">Grupo creado con éxito</string>
 </resources>

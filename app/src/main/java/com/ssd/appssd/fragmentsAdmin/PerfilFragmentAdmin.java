@@ -85,7 +85,7 @@ public class PerfilFragmentAdmin extends Fragment {
                                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-                                            Picasso.with(getActivity())
+                                            Picasso.with(getContext())
                                                     .load(uri)
                                                     .into(photo);
                                         }

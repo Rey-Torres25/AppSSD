@@ -2,28 +2,26 @@ package com.ssd.appssd.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ssd.appssd.ChatActivity;
 import com.ssd.appssd.ChatGrupal;
 import com.ssd.appssd.R;
 import com.ssd.appssd.objects.Grupo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> {
     private Context mContext;
-    private List<Grupo> mGrupos;
+    private ArrayList<Grupo> mGrupos;
 
-    public GrupoAdapter(Context mContext, List<Grupo> mGrupos) {
+    public GrupoAdapter(Context mContext, ArrayList<Grupo> mGrupos) {
         this.mGrupos = mGrupos;
         this.mContext = mContext;
     }
@@ -44,6 +42,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatGrupal.class);
                 intent.putExtra("id", grupo.getId());
+                intent.putStringArrayListExtra("usuarios", grupo.getUsuarios());
                 mContext.startActivity(intent);
             }
         });

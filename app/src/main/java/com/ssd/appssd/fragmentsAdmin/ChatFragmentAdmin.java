@@ -2,6 +2,7 @@ package com.ssd.appssd.fragmentsAdmin;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +39,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.ChatActivity;
+import com.ssd.appssd.ChatGrupal;
 import com.ssd.appssd.R;
 import com.ssd.appssd.adapter.DialogAdapter;
 import com.ssd.appssd.adapter.DialogListener;
@@ -66,7 +69,7 @@ public class ChatFragmentAdmin extends Fragment implements DialogListener {
     private GrupoAdapter grupoAdapter;
     private ArrayList<String> seleccion;
     private List<User> mUsers;
-    private List<Grupo> mGrupos;
+    private ArrayList<Grupo> mGrupos;
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
     private AlertDialog dialog;
@@ -87,9 +90,7 @@ public class ChatFragmentAdmin extends Fragment implements DialogListener {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
 
-        inflater2 = getActivity().getLayoutInflater();
-        dialogView = inflater2.inflate(R.layout.make_group_dialog, null);
-        nombre_grupo = (EditText) dialogView.findViewById(R.id.nombre_grupo);
+
 
         recyclerViewGrupo = view.findViewById(R.id.recyclerviewgrupos);
         recyclerViewGrupo.setHasFixedSize(true);
@@ -213,6 +214,9 @@ public class ChatFragmentAdmin extends Fragment implements DialogListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.grupo:
+                inflater2 = getActivity().getLayoutInflater();
+                dialogView = inflater2.inflate(R.layout.make_group_dialog, null);
+                nombre_grupo = (EditText) dialogView.findViewById(R.id.nombre_grupo);
                 recyclerView2 = dialogView.findViewById(R.id.recyclerview2);
                 recyclerView2.setHasFixedSize(true);
                 recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -225,19 +229,18 @@ public class ChatFragmentAdmin extends Fragment implements DialogListener {
                     public void onClick(DialogInterface dialog, int which) {
                         seleccion.add(mUser.getEmail());
                         seleccion.sort(String::compareTo);
-                        mStore.collection("Grupos").whereEqualTo("usuarios", seleccion)
-                                .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                            if(queryDocumentSnapshots.isEmpty()) {
-                                DocumentReference grupoReference = mStore.collection("Grupos").document();
-                                Grupo grupo = new Grupo(seleccion, nombre_grupo.getText().toString(), grupoReference.getId());
-                                mStore.collection("Grupos")
-                                        .document(grupoReference.getId())
-                                        .set(grupo)
-                                        .addOnSuccessListener(documentReference -> {
+                        DocumentReference grupoReference = mStore.collection("Grupos").document();
+                        Grupo grupo = new Grupo(seleccion, nombre_grupo.getText().toString(), grupoReference.getId());
+                        mStore.collection("Grupos")
+                                .document(grupoReference.getId())
+                                .set(grupo)
+                                .addOnSuccessListener(documentReference -> {
+                                    Intent intent = new Intent(getContext(), ChatGrupal.class);
+                                    intent.putExtra("id", grupo.getId());
+                                    intent.putStringArrayListExtra("usuarios", grupo.getUsuarios());
+                                    getContext().startActivity(intent);
+                                    Toast.makeText(getContext(), getString(R.string.grupo_creado), Toast.LENGTH_SHORT).show();
                                 });
-                            }else{
-                            }
-                        });
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancelar_dialog), new DialogInterface.OnClickListener() {
@@ -252,9 +255,7 @@ public class ChatFragmentAdmin extends Fragment implements DialogListener {
                 nombre_grupo.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
