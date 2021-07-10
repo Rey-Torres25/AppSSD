@@ -3,12 +3,15 @@ package com.ssd.appssd.objects;
 public class User {
 
     private String nombre, correo, imageURL, correoPadre;
+    private boolean verificado, correoEnviado;
 
-    public User(String nombre, String correo, String imageURL, String correoPadre) {
+    public User(String nombre, String correo, String imageURL, String correoPadre, boolean verificado, boolean correoEnviado) {
         this.nombre = nombre;
         this.correo = correo;
         this.imageURL = imageURL;
+        this.verificado = verificado;
         this.correoPadre = correoPadre;
+        this.correoEnviado = correoEnviado;
     }
 
     public User(){
@@ -45,5 +48,21 @@ public class User {
 
     public void setCorreoPadre(String correoPadre) {
         this.correoPadre = correoPadre;
+    }
+
+    public boolean isVerificado() {
+        return verificado;
+    }
+
+    public void setVerificado(boolean verificado) {
+        this.verificado = verificado;
+    }
+
+    public boolean isCorreoEnviado() {
+        return correoEnviado;
+    }
+
+    public void setCorreoEnviado(boolean correoEnviado) {
+        this.correoEnviado = correoEnviado;
     }
 }

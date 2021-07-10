@@ -70,5 +70,6 @@
     <string name="registrar_dialog_confirmacion">Registrar</string>
     <string name="eliminar_usuario">Eliminar</string>
     <string name="confirmar_eliminar">¿Desea eliminar el usuario seleccinonado?</string>
+    <string name="usuario_eliminado">El usuario ha sido eliminado con éxito</string>
     <string name="grupo_creado">Grupo creado con éxito</string>
 </resources>

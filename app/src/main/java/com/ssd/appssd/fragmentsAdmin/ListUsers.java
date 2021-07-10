@@ -139,6 +139,8 @@ public class ListUsers extends Fragment {
                         map.put("nombre", nombre.getText().toString());
                         map.put("correo", correo.getText().toString());
                         map.put("imageURL", "default");
+                        map.put("verificado", false);
+                        map.put("correoEnviado", false);
                         map.put("correoPadre", mUser.getEmail());
                         map.put("timestamp", FieldValue.serverTimestamp());
                         mStore.collection("Usuarios")
@@ -147,8 +149,31 @@ public class ListUsers extends Fragment {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(getContext(), "Has registrado correctamente al usuario",
-                                                Toast.LENGTH_LONG).show();
+                                        Map<String, Object> map2 = new HashMap<>();
+                                        map2.put("nombre", nombre.getText().toString());
+                                        map2.put("correo", correo.getText().toString());
+                                        map2.put("imageURL", "default");
+                                        map2.put("verificado", false);
+                                        map2.put("correoPadre", mUser.getEmail());
+                                        map2.put("timestamp", FieldValue.serverTimestamp());
+                                        mStore.collection("Administrador")
+                                                .document(mUser.getEmail())
+                                                .collection("Usuarios")
+                                                .document(correo.getText().toString())
+                                                .set(map2)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Toast.makeText(getContext(), "Has registrado correctamente al usuario",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getContext(), "Hubo un error con el registro",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -168,7 +193,6 @@ public class ListUsers extends Fragment {
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
                     nombre.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -109,6 +110,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                                                    @Override
                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                                        if(task.isSuccessful()) {
+                                                                           Toast.makeText(mContext, mContext.getString(R.string.usuario_eliminado), Toast.LENGTH_SHORT).show();
                                                                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                                                                String id = documentSnapshot.getId();
                                                                                mStore.collection("Chats")
