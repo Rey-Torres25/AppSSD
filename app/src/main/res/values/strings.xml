@@ -53,6 +53,7 @@
     <string name="eliminar_grupo">Eliminar grupo</string>
     <string name="eliminado_con_exito">El grupo ha sido eliminado con éxito</string>
     <string name="confirm_delete_group">¿Desea eliminar el grupo?</string>
+    <string name="cancelar_dialog">Cancelar</string>
     <string name="see_users">Ver usuarios</string>
     <string name="no_users_add">No hay usuarios para agregar</string>
     <string name="no_users_delete">No hay usuarios para eliminar</string>
@@ -64,12 +65,31 @@
     <string name="nombre_grupo">Nombre del grupo</string>
     <string name="option_grupo">Crear</string>
     <string name="grupo">Crear grupo</string>
-    <string name="video_call">Video llamada</string>
-    <string name="cancelar_dialog">Cancelar</string>
     <string name="registrar_usuario">Registrar usuario</string>
     <string name="registrar_dialog_confirmacion">Registrar</string>
     <string name="eliminar_usuario">Eliminar</string>
     <string name="confirmar_eliminar">¿Desea eliminar el usuario seleccinonado?</string>
     <string name="usuario_eliminado">El usuario ha sido eliminado con éxito</string>
     <string name="grupo_creado">Grupo creado con éxito</string>
+
+    <!--Parte de la videollamada-->
+    <string name="video_call">Video llamada</string>
+    <string name="llamada_entrante">Llamada entrante</string>
+    <string name="nombres">Nombre(s)</string>
+    <string name="llamar_a_ti_mismo">Se detecto que iniciaste con el mismo celular, no te puedes llamar a ti mismo</string>
+    <!--Parte de la videollamada-->
+
+    <!--Parte de LLamada Entrante-->
+    <string name="llamando">Llamando</string>
+    <string name="error_al_conectar_llamada">Error al conectar la llamada, vuelva a intentar</string>
+    <string name="cancelo_llamada">Canceló la llamada</string>
+    <!--Parte de LLamada Entrante-->
+
+    <!--Parte de Llamar-->
+
+    <!--Parte de Llamar-->
+
+
+
+
 </resources>

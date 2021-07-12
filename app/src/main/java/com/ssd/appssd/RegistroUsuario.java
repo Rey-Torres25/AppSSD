@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import com.ssd.appssd.utilities.Constants;
+
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -33,7 +36,12 @@ public class RegistroUsuario extends AppCompatActivity {
     private Button bRegister;
     private FirebaseAuth mAuth;
     private String Token = "";
+    private String FCM_Token = "";
+    private String User_id = "";
+    private PreferenceManager preferenceManager;
     private FirebaseFirestore mStore;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,6 +238,8 @@ public class RegistroUsuario extends AppCompatActivity {
                                                                         Map<String, Object> map = new HashMap<>();
                                                                         map.put("nombre", name.getText().toString());
                                                                         map.put("correo", email.getText().toString());
+                                                                        map.put("FCM_Token", FCM_Token);
+                                                                        map.put("User_id", User_id);
                                                                         map.put("imageURL", "default");
                                                                         map.put("token", Token);
                                                                         map.put("timestamp", FieldValue.serverTimestamp());
@@ -297,6 +307,19 @@ public class RegistroUsuario extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendFCMTokenToDataBase(String User) {
+        mStore.collection("Usuarios").document("FCM_Token").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+            }
+        })
+        ;
+
+
+
     }
 
 }

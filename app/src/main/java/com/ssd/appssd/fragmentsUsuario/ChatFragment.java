@@ -1,5 +1,6 @@
 package com.ssd.appssd.fragmentsUsuario;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.ssd.appssd.Llamar;
 import com.ssd.appssd.R;
 import com.ssd.appssd.adapter.GrupoAdapter;
 import com.ssd.appssd.adapter.UserAdapter;
@@ -49,6 +53,9 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+    ImageView llamar;
+    DocumentReference chat;
+    private String tokenLlamada = "";
 
     public ChatFragment() {
         // Required empty public constructor
@@ -159,6 +166,36 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 });
+
+    }
+    public void onCreateView1(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        llamar = v.findViewById(R.id.video);
+        llamar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chat.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()){
+                            if(!tokenLlamada.matches(documentSnapshot.getString(""))) {
+                                Intent llamada = new Intent(getContext(), Llamar.class);
+                                llamada.putExtra("Usuarios", documentSnapshot.getString("Id_usuario"));
+                                llamada.putExtra("url", "");
+                                llamada.putExtra("nombreMio", mUser.getDisplayName());
+                                llamada.putExtra("myToken", tokenLlamada);
+                                startActivity(llamada);
+                            } else {
+                                Toast.makeText(getContext(), getString(R.string.llamar_a_ti_mismo), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
+
+            }
+        });
+
 
     }
 

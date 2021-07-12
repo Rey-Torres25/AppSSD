@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.AppSSD" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -7,10 +8,18 @@
         <item name="colorAccent">@color/teal_200</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="titleTextColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/blueOnBackground</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorSecondary"> @color/red</item>
         <!-- Customize your theme here. -->
     </style>
 
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@color/border_grey</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="android:navigationBarColor">@color/black_red</item>
+        <item name="colorPrimaryDark">@color/black_red</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 </resources>

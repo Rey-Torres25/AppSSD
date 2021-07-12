@@ -4,7 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ssd.appssd.RegistroUsuario;
 import android.app.Activity;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.ssd.appssd.utilities.Constants;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +17,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loadLocale();
         setContentView(R.layout.activity_main);
+
 
         //Firebase Instances
         mStore = FirebaseFirestore.getInstance();
@@ -177,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }//Termina Acitivty Main
+
 
     private void showCambiarIdiomaDialog() {
         final String[] ListItems = {"English", "Español"};
@@ -470,6 +477,5 @@ public class MainActivity extends AppCompatActivity {
         Intent registro = new Intent(MainActivity.this, RegistroUsuario.class);
         startActivity(registro);
     }
-
 
 }

@@ -20,4 +20,16 @@
     <color name="stroke">#665f5f</color>
     <color name="orange">#cc5d10</color>
     <color name="right">#159090</color>
+    <color name="red">#E53935</color>
+    <color name="black_red">#AA2A27</color>
+    <color name="blue_low">#73bdff</color>
+    <color name="blue">#1E88E5</color>
+    <color name="blueOnBackground">#1A78CA</color>
+    <color name="darkBlue">#1664A8</color>
+    <color name="background_color">#E8EAF6</color>
+
+    <color name="calendarRed">#f65e63</color>
+    <color name="verde">#35E551</color>
+    <color name="gray">#E3E3E3</color>
+    <color name="morado">#8F00C8</color>
 </resources>

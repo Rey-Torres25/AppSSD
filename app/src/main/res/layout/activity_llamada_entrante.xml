@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/morado"
+    tools:context=".LlamadaEntrante">
+
+    <TextView
+        android:id="@+id/llamada_entrante_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="100dp"
+        android:fontFamily="@font/ibmplexsans_bold"
+        android:text="@string/llamada_entrante"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/llamada_entrante_foto_card"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@+id/llamada_entrante_titulo"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="111dp"
+        android:background="@color/blueOnBackground"
+        android:backgroundTint="@color/blueOnBackground"
+        app:cardCornerRadius="20dp">
+
+        <ImageView
+            android:id="@+id/llamada_entrante_foto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_logo" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/llamada_entrante_nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llamada_entrante_foto_card"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="-3dp"
+        android:fontFamily="@font/ibmplexsans_bold"
+        android:text="@string/nombres"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/llamada_entrante_llamar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/icon_contestar_drawable" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/llamada_entrante_colgar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/icon_colgar_drawable" />
+
+</RelativeLayout>
