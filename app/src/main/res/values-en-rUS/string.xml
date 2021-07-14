@@ -10,7 +10,9 @@
     <string name="olvidaste_tu_contraseña">Forgot Password?</string>
     <string name="iniciar_sesion">Log In</string>
     <string name="registrarse">Sign up</string>
+    <string name="Registro_llenado">Registration</string>
     <string name="cambiar_idioma">Change language</string>
+    <string name="no_existe_usuario">No user exists</string>
     <!--Parte de Iniciar sesion-->
 
     <!--Parte del Registro-->
@@ -20,6 +22,9 @@
     <string name="se_creo_usuario_correctamente">User created successfully.</string>
     <string name="autentificacion_error">The email has not been confirmed. Please confirm…</string>
     <string name="token">Token</string>
+    <string name="registro_token_correctamente">Your token was registered successfully.</string>
+    <string name="token_no_existe">The token I entered does not exist, please verify it.</string>
+    <string name="token_en_uso">The token I entered is already in use! Please enter another.</string>
     <!--Parte del Registro-->
 
     <!--Parte de Recupera tu contraseña-->
@@ -42,8 +47,68 @@
 
 
     <!--Parte de la Barra de navegacion de Usuario Estandar-->
+    <string name="bienvenido_usuario">Welcome</string>
     <string name="registros">Register</string>
+    <string name="usuarios_nav">Users</string>
     <string name="chat">Chat</string>
     <string name="perfil">Profile</string>
     <!--Parte de la Barra de navegacion de Usuario Estandar-->
+
+    <!--Parte de perfil-->
+    <string name="nombre_perfil">Name</string>
+    <string name="correo_perfil">Email</string>
+    <string name="cambiar_foto">Change</string>
+    <!--Parte de perfil-->
+
+    <!--Parte de chat-->
+    <string name="No_mensaje_vacio">You cannot send an empty message</string>
+    <string name="escribe_un_mensaje">Write a message ...</string>
+    <string name="grupo_chat">Group:</string>
+    <!--Parte de chat-->
+
+    <!--Parte de Ingles-->
+    <string name="escoge_el_idioma">Choose your lenguage</string>
+    <!--Parte de Ingles-->
+
+    <!--Parte del Spinner de tipo de usuario-->
+    <string-array name="options_user">
+        <item name="Administrador">Administrator</item>
+        <item name="Usuario">User</item>
+    </string-array>
+    <!--Parte del Spinner de tipo de usuario-->
+
+    <string name="eliminar_grupo">Delete group</string>
+    <string name="eliminado_con_exito">The group has been successfully eliminated</string>
+    <string name="confirm_delete_group">Do you want to delete the group?</string>
+    <string name="cancelar_dialog">Cancel</string>
+    <string name="see_users">View users</string>
+    <string name="no_users_add">There are no users to add</string>
+    <string name="no_users_delete">There are no users to delete</string>
+    <string name="participante_agregado">Participant added successfully</string>
+    <string name="participante_eliminado">Participant successfully eliminated</string>
+    <string name="agregar_usuario_dialog">Add</string>
+    <string name="agregar_usuario_grupo">Add participants</string>
+    <string name="eliminar_usuario_grupo">Delete participants</string>
+    <string name="nombre_grupo">Group name</string>
+    <string name="option_grupo">Create</string>
+    <string name="grupo">Create group</string>
+    <string name="registrar_usuario">Register user</string>
+    <string name="registrar_dialog_confirmacion">to register</string>
+    <string name="eliminar_usuario">Delete</string>
+    <string name="confirmar_eliminar">Do you want to delete the selected user?</string>
+    <string name="usuario_eliminado">User has been successfully removed</string>
+    <string name="grupo_creado">Group created successfully</string>
+
+    <!--Parte de la videollamada-->
+    <string name="video_call">Video call</string>
+    <string name="llamada_entrante">Incoming call</string>
+    <string name="nombres">Names</string>
+
+    <!--Parte de la videollamada-->
+
+    <!--Parte de LLamada Entrante-->
+    <string name="llamando">Calling</string>
+    <string name="error_al_conectar_llamada">Failed to connect the call, please try again</string>
+    <string name="cancelo_llamada">Cancel the call</string>
+    <!--Parte de LLamada Entrante-->
 </resources>

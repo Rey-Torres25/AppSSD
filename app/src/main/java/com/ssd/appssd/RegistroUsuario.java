@@ -1,11 +1,16 @@
 package com.ssd.appssd;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.ssd.appssd.utilities.Constants;
 
 import android.os.Bundle;
@@ -25,6 +30,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -238,8 +246,6 @@ public class RegistroUsuario extends AppCompatActivity {
                                                                         Map<String, Object> map = new HashMap<>();
                                                                         map.put("nombre", name.getText().toString());
                                                                         map.put("correo", email.getText().toString());
-                                                                        map.put("FCM_Token", FCM_Token);
-                                                                        map.put("User_id", User_id);
                                                                         map.put("imageURL", "default");
                                                                         map.put("token", Token);
                                                                         map.put("timestamp", FieldValue.serverTimestamp());
@@ -309,17 +315,21 @@ public class RegistroUsuario extends AppCompatActivity {
         }
     }
 
-    private void sendFCMTokenToDataBase(String User) {
-        mStore.collection("Usuarios").document("FCM_Token").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    /*private void sendFCMTokenToDataBase(String FCM_Token) {
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()){
+                    String FCM_Token = task.getResult().getToken();
+                     mStore.collection("Usuarios").document("FCM_Token");
+                }else{
 
+                }
             }
-        })
-        ;
+        });
 
 
-
-    }
+    }*/
 
 }

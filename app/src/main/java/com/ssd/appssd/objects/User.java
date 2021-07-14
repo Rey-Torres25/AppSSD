@@ -1,8 +1,9 @@
 package com.ssd.appssd.objects;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
 
-    private String nombre, correo, imageURL, correoPadre, FCM_Token, User_id;
+    private String nombre, correo, imageURL, correoPadre;
     private boolean verificado, correoEnviado;
 
     public User(String nombre, String correo, String imageURL, String correoPadre, boolean verificado, boolean correoEnviado, String FCM_Token, String User_id) {
@@ -12,8 +13,7 @@ public class User {
         this.verificado = verificado;
         this.correoPadre = correoPadre;
         this.correoEnviado = correoEnviado;
-        this.FCM_Token = FCM_Token;
-        this.User_id = User_id;
+
     }
 
     public User() {
@@ -66,22 +66,6 @@ public class User {
 
     public void setCorreoEnviado(boolean correoEnviado) {
         this.correoEnviado = correoEnviado;
-    }
-
-    public String getFCM_Token() {
-        return FCM_Token;
-    }
-
-    public void setFCM_Token(String FCM_Token) {
-        this.FCM_Token = FCM_Token;
-    }
-
-    public String getUser_id() {
-        return User_id;
-    }
-
-    public void setUser_id(String User_id) {
-        this.User_id = User_id;
     }
 
 }

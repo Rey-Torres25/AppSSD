@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
     private void showCambiarIdiomaDialog() {
         final String[] ListItems = {"English", "Español"};
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-        mBuilder.setTitle("Escoge el idioma...");
         mBuilder.setSingleChoiceItems(ListItems, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
@@ -288,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                                                                                                         @Override
                                                                                                         public void onSuccess(Void unused) {
                                                                                                             Intent intent = new Intent(MainActivity.this, clase);
-                                                                                                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                                                                            Toast.makeText(MainActivity.this, String.format(getString(R.string.bienvenido_usuario)+documentSnapshot.get("nombre")+"!"),
                                                                                                                     Toast.LENGTH_SHORT).show();
                                                                                                             startActivity(intent);
                                                                                                             finish();
@@ -298,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                                                                                     });
                                                                         }else{
                                                                             Intent intent = new Intent(MainActivity.this, clase);
-                                                                            Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                                            Toast.makeText(MainActivity.this, String.format(getString(R.string.bienvenido_usuario)+documentSnapshot.get("nombre")+"!"),
                                                                                     Toast.LENGTH_SHORT).show();
                                                                             startActivity(intent);
                                                                             finish();

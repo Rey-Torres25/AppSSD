@@ -53,9 +53,6 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore mStore;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    ImageView llamar;
-    DocumentReference chat;
-    private String tokenLlamada = "";
 
     public ChatFragment() {
         // Required empty public constructor
@@ -166,36 +163,6 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 });
-
-    }
-    public void onCreateView1(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
-        llamar = v.findViewById(R.id.video);
-        llamar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chat.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
-                            if(!tokenLlamada.matches(documentSnapshot.getString(""))) {
-                                Intent llamada = new Intent(getContext(), Llamar.class);
-                                llamada.putExtra("Usuarios", documentSnapshot.getString("Id_usuario"));
-                                llamada.putExtra("url", "");
-                                llamada.putExtra("nombreMio", mUser.getDisplayName());
-                                llamada.putExtra("myToken", tokenLlamada);
-                                startActivity(llamada);
-                            } else {
-                                Toast.makeText(getContext(), getString(R.string.llamar_a_ti_mismo), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
-                });
-
-            }
-        });
-
 
     }
 

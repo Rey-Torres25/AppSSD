@@ -43,7 +43,6 @@ public class Llamar extends AppCompatActivity {
 
         HashMap<String, String> info = new HashMap<>();
         info.put("nombre", getIntent().getStringExtra("nombreMio"));
-        info.put("url", getIntent().getStringExtra("urlMio"));
         info.put("invitador", getIntent().getStringExtra("myToken"));
 
         CircleImageView colgar = findViewById(R.id.llamar_colgar);
