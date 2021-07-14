@@ -112,10 +112,12 @@ public class RecordsFragmentAdmin extends Fragment {
                 correo = snapshot.getValue(String.class);
                 System.out.println("Joder = "+ correo);
                 if(!correo.equals("null")){
-                    Tabla tabla = new Tabla(correo, Timestamp.now());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("correo", correo);
+                    map.put("fecha", Timestamp.now());
                     mStore.collection("Registros")
                             .document()
-                            .set(tabla);
+                            .set(map);
                 }else{
                     System.out.println("no entra");
                 }
