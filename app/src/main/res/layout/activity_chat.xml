@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:hint="Escribe un mensaje..."
+            android:hint="@string/escribe_un_mensaje"
             android:layout_centerVertical="true"/>
         
         <ImageButton

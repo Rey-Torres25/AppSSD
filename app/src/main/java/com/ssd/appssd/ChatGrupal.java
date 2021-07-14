@@ -132,7 +132,7 @@ public class ChatGrupal extends AppCompatActivity implements DialogListener, Use
                 Message mensaje = new Message(fUser.getEmail(), msg, Timestamp.now());
                 fStore.collection("Grupos").document(id).collection("TODO").add(mensaje);
             } else {
-                Toast.makeText(ChatGrupal.this, "No puedes enviar un mensaje vacío",
+                Toast.makeText(ChatGrupal.this, String.format(getString(R.string.No_mensaje_vacio)),
                         Toast.LENGTH_SHORT).show();
             }
             textSend.setText("");

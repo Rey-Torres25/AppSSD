@@ -8,6 +8,7 @@
     <string name="olvidaste_tu_contraseña">¿Olvidaste tu contraseña?</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
     <string name="registrarse">Registrarse</string>
+    <string name="Registro_llenado">Registro</string>
     <string name="cambiar_idioma">Cambiar idioma</string>
     <string name="no_existe_usuario">No existe usuario</string>
     <!--Parte de Iniciar sesion-->
@@ -40,15 +41,36 @@
     <string name="hello_blank_fragment">Hola fragmento en blanco</string>
 
     <!--Parte de la Barra de navegacion de Usuario Estandar-->
+    <string name="bienvenido_usuario">Bienvenid@</string>
     <string name="registros">Registros</string>
+    <string name="usuarios_nav">Usuarios</string>
     <string name="chat">Chat</string>
     <string name="perfil">Perfil</string>
     <!--Parte de la Barra de navegacion de Usuario Estandar-->
 
+    <!--Parte de perfil-->
+    <string name="nombre_perfil">Nombre</string>
+    <string name="correo_perfil">Correo electronico</string>
+    <string name="cambiar_foto">Cambiar</string>
+    <!--Parte de perfil-->
+
+    <!--Parte de chat-->
+    <string name="No_mensaje_vacio">No puedes enviar un mensaje vacío</string>
+    <string name="escribe_un_mensaje">Escribe un mensaje...</string>
+    <string name="grupo_chat">Grupo:</string>
+    <!--Parte de chat-->
+
+    <!--Parte de Ingles-->
+    <string name="escoge_el_idioma">Escoge el idioma…</string>
+
+    <!--Parte de Ingles-->
+
+    <!--Parte del Spinner de tipo de usuario-->
     <string-array name="options_user">
-        <item>Administrador</item>
-        <item>Usuario</item>
+        <item name="Administrador">Administrador</item>
+        <item name="Usuario">Usuario</item>
     </string-array>
+    <!--Parte del Spinner de tipo de usuario-->
 
     <string name="eliminar_grupo">Eliminar grupo</string>
     <string name="eliminado_con_exito">El grupo ha sido eliminado con éxito</string>
@@ -76,7 +98,7 @@
     <string name="video_call">Video llamada</string>
     <string name="llamada_entrante">Llamada entrante</string>
     <string name="nombres">Nombre(s)</string>
-    <string name="llamar_a_ti_mismo">Se detecto que iniciaste con el mismo celular, no te puedes llamar a ti mismo</string>
+
     <!--Parte de la videollamada-->
 
     <!--Parte de LLamada Entrante-->

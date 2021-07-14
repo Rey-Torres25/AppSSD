@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.dropbox.core.util.Collector;
+import com.ssd.appssd.globals.Global;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ssd.appssd.components.ComponentMessage;
@@ -37,7 +43,9 @@ import com.ssd.appssd.objects.User;
 import com.ssd.appssd.objects.Chat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,7 +59,11 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseStorage fStorage;
     StorageReference storageReference;
     String chatID;
-
+    ImageView llamar;
+    DocumentReference chat;
+    private LinearLayout layout;
+    private String tokenLlamada = "";
+    private String miToken = "";
 
     ImageButton btnSend;
     EditText textSend;
@@ -62,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
     final long ONE_MEGABYTE = 1024 * 1024;
     ScrollView scrollView; //barra de scroll para el chat
     Runnable paginar;    //Evento para redireccionar hasta abajo el chat
+    private ResourceBundle documentSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
                 Message mensaje = new Message(fUser.getEmail(), msg, Timestamp.now());
                 fStore.collection("Chats").document(chatID).collection("TODO").add(mensaje);
             } else {
-                Toast.makeText(ChatActivity.this, "No puedes enviar un mensaje vacío",
+                Toast.makeText(ChatActivity.this, String.format(getString(R.string.No_mensaje_vacio)),
                         Toast.LENGTH_SHORT).show();
             }
             textSend.setText("");
@@ -161,6 +174,8 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> miToken = s);
+
         ArrayList<String> usuariosF = new ArrayList<>();
         usuariosF.add(userCorreo);
         usuariosF.add(fUser.getEmail());
@@ -182,9 +197,8 @@ public class ChatActivity extends AppCompatActivity {
                 getMessages(chatID);
             }
         });
-
-
     }
+
 
 
     private void getMessages(String id) {
@@ -225,10 +239,32 @@ public class ChatActivity extends AppCompatActivity {
     //Método al clickear ícono de video llamada
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
+        User user = (User) getIntent().getSerializableExtra("usuarios");
+            Intent llamada = new Intent(ChatActivity.this, Llamar.class);
+            llamada.putExtra("usuarios", getString(Integer.parseInt("id_Trabajador")));
+            llamada.putExtra("nombre", user.getNombre());
+            llamada.putExtra("nombreMio", Global.user.getNombre());
+            llamada.putExtra("myToken", tokenLlamada);
+            startActivity(llamada);
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void getChat() {
+        DocumentReference chatID = FirebaseFirestore.getInstance().document("Chats/" + Global.referencia);
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                tokenLlamada = s;
+                HashMap<String, String> data = new HashMap<>();
+                data.put("idCliente", s);
+                chatID.set(data, SetOptions.mergeFields("idCliente"));
+            }
+        });
+
+    }
+
+    //Token llamada es myToken yo haciendo la llamada
+    //document snapshot get string token de la otra persona
 
 }
