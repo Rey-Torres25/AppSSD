@@ -7,16 +7,14 @@
     <TableRow>
         <TextView
             android:id="@+id/correo_item"
-            android:gravity="center"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:padding="10dp"
             android:layout_column="1"
             />
         <TextView
             android:id="@+id/fecha_item"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:padding="10dp"
-            android:gravity="center"
             android:layout_column="2"
             />
     </TableRow>
