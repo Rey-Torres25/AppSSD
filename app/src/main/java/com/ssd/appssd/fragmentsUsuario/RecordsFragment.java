@@ -116,10 +116,13 @@ public class RecordsFragment extends Fragment {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
                                         User user = documentSnapshot.toObject(User.class);
-                                        Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("correo", user.getCorreo());
+                                        map.put("nombre", user.getNombre());
+                                        map.put("fecha", Timestamp.now());
                                         mStore.collection("Registros")
                                                 .document()
-                                                .set(tabla);
+                                                .set(map);
                                     }else{
                                         mStore.collection("Administrador")
                                                 .document(correo)
@@ -129,10 +132,13 @@ public class RecordsFragment extends Fragment {
                                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                         if(documentSnapshot.exists()){
                                                             User user = documentSnapshot.toObject(User.class);
-                                                            Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
+                                                            Map<String, Object> map = new HashMap<>();
+                                                            map.put("correo", user.getCorreo());
+                                                            map.put("nombre", user.getNombre());
+                                                            map.put("fecha", Timestamp.now());
                                                             mStore.collection("Registros")
                                                                     .document()
-                                                                    .set(tabla);
+                                                                    .set(map);
                                                         }
                                                     }
                                                 });
