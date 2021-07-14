@@ -232,6 +232,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.video_call_menu, menu);
+
         return true;
     }
 
@@ -241,7 +242,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         User user = (User) getIntent().getSerializableExtra("usuarios");
             Intent llamada = new Intent(ChatActivity.this, Llamar.class);
-            llamada.putExtra("usuarios", getString(Integer.parseInt("id_Trabajador")));
+            llamada.putExtra("usuarios", getString(Integer.parseInt("id_administradpr")));
             llamada.putExtra("nombre", user.getNombre());
             llamada.putExtra("nombreMio", Global.user.getNombre());
             llamada.putExtra("myToken", tokenLlamada);
@@ -257,8 +258,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onSuccess(String s) {
                 tokenLlamada = s;
                 HashMap<String, String> data = new HashMap<>();
-                data.put("idCliente", s);
-                chatID.set(data, SetOptions.mergeFields("idCliente"));
+                data.put("idusuario", s);
+                chatID.set(data, SetOptions.mergeFields("idusuario"));
             }
         });
 

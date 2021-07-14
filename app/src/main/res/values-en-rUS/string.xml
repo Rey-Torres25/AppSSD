@@ -54,6 +54,12 @@
     <string name="perfil">Profile</string>
     <!--Parte de la Barra de navegacion de Usuario Estandar-->
 
+    <!--Parte del Registro-->
+    <string name="correo_registro">Date</string>
+    <string name="fecha_registro">Registration date</string>
+    <!--Parte del Registro-->
+
+
     <!--Parte de perfil-->
     <string name="nombre_perfil">Name</string>
     <string name="correo_perfil">Email</string>
@@ -69,6 +75,13 @@
     <!--Parte de Ingles-->
     <string name="escoge_el_idioma">Choose your lenguage</string>
     <!--Parte de Ingles-->
+
+    <!--Parte de Toolbar-->
+    <string name="registros_toolbar">Records</string>
+    <string name="usuarios_toolbar">Users</string>
+    <string name="chat_toolbar">Chat</string>
+    <string name="perfil_toolbar">User profile</string>
+    <!--Parte de Toolbar-->
 
     <!--Parte del Spinner de tipo de usuario-->
     <string-array name="options_user">

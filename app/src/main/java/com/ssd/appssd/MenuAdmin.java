@@ -32,29 +32,29 @@ public class MenuAdmin extends AppCompatActivity {
         if(bottomNavigationView.getSelectedItemId() == R.id.registros) {
             bottomNavigationView.setSelectedItemId(R.id.registros);
             showSelectedFragment(new RecordsFragmentAdmin());
-            getSupportActionBar().setTitle("Registros");
+            getSupportActionBar().setTitle(String.format(getString(R.string.registros_toolbar)));
         }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.registros){
                     showSelectedFragment(new RecordsFragmentAdmin());
-                    getSupportActionBar().setTitle("Registros");
+                    getSupportActionBar().setTitle(String.format(getString(R.string.registros_toolbar)));
                 }
 
                 if(item.getItemId() == R.id.usuarios){
                     showSelectedFragment(new ListUsers());
-                    getSupportActionBar().setTitle("Usuarios");
+                    getSupportActionBar().setTitle(String.format(getString(R.string.usuarios_toolbar)));
                 }
 
                 if(item.getItemId() == R.id.chat){
                     showSelectedFragment(new ChatFragmentAdmin());
-                    getSupportActionBar().setTitle("Chat");
+                    getSupportActionBar().setTitle(String.format(getString(R.string.chat_toolbar)));
                 }
 
                 if(item.getItemId() == R.id.perfil){
                     showSelectedFragment(new PerfilFragmentAdmin());
-                    getSupportActionBar().setTitle("Perfil");
+                    getSupportActionBar().setTitle(String.format(getString(R.string.perfil_toolbar)));
                 }
                 return true;
             }

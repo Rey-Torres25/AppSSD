@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                                                                                     });
                                                                         }else{
                                                                             Intent intent = new Intent(MainActivity.this, clase);
-                                                                            Toast.makeText(MainActivity.this, String.format(getString(R.string.bienvenido_usuario)+documentSnapshot.get("nombre")+"!"),
+                                                                            Toast.makeText(MainActivity.this, String.format(getString(R.string.bienvenido_usuario) +documentSnapshot.get("nombre")+"!"),
                                                                                     Toast.LENGTH_SHORT).show();
                                                                             startActivity(intent);
                                                                             finish();
@@ -451,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
                                             public void onSuccess(AuthResult authResult) {
                                                 if(mAuth.getCurrentUser().isEmailVerified()){
                                                     Intent intent = new Intent(MainActivity.this, clase);
-                                                    Toast.makeText(MainActivity.this, "¡Bienvenid@, "+documentSnapshot.get("nombre")+"!",
+                                                    Toast.makeText(MainActivity.this, String.format(getString(R.string.bienvenido_usuario)+documentSnapshot.get("nombre")+"!"),
                                                             Toast.LENGTH_SHORT).show();
                                                     startActivity(intent);
                                                     finish();
