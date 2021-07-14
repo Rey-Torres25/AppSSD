@@ -107,7 +107,7 @@ public class RecordsFragment extends Fragment {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 correo = snapshot.getValue(String.class);
                 System.out.println("Joder = "+ correo);
-                if(!correo.equals("null")){
+                if(!correo.equals("null") && correo.equals(mUser.getEmail())){
                     mStore.collection("Usuarios")
                             .document(correo)
                             .get()
@@ -116,13 +116,10 @@ public class RecordsFragment extends Fragment {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
                                         User user = documentSnapshot.toObject(User.class);
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("correo", user.getCorreo());
-                                        map.put("nombre", user.getNombre());
-                                        map.put("fecha", Timestamp.now());
+                                        Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
                                         mStore.collection("Registros")
                                                 .document()
-                                                .set(map);
+                                                .set(tabla);
                                     }else{
                                         mStore.collection("Administrador")
                                                 .document(correo)
@@ -132,13 +129,10 @@ public class RecordsFragment extends Fragment {
                                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                         if(documentSnapshot.exists()){
                                                             User user = documentSnapshot.toObject(User.class);
-                                                            Map<String, Object> map = new HashMap<>();
-                                                            map.put("correo", user.getCorreo());
-                                                            map.put("nombre", user.getNombre());
-                                                            map.put("fecha", Timestamp.now());
+                                                            Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
                                                             mStore.collection("Registros")
                                                                     .document()
-                                                                    .set(map);
+                                                                    .set(tabla);
                                                         }
                                                     }
                                                 });
