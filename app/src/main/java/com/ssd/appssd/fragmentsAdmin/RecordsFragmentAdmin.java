@@ -58,6 +58,7 @@ public class RecordsFragmentAdmin extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private List<Tabla> mTabla;
+    private String correo;
     private DatabaseReference databaseReference;
 
     @Override
@@ -108,21 +109,15 @@ public class RecordsFragmentAdmin extends Fragment {
         databaseReference.child("registros").child("entradas").child("usuarios").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                DocumentReference grupoReference = mStore.collection("Registros").document();
-                String correo = snapshot.getValue(String.class);
+                correo = snapshot.getValue(String.class);
+                System.out.println("Joder = "+ correo);
                 if(!correo.equals("null")){
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("correo", correo);
-                    map.put("fecha", Timestamp.now());
+                    Tabla tabla = new Tabla(correo, Timestamp.now());
                     mStore.collection("Registros")
-                            .document(grupoReference.getId())
-                            .set(map)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-
-                                }
-                            });
+                            .document()
+                            .set(tabla);
+                }else{
+                    System.out.println("no entra");
                 }
 
             }
