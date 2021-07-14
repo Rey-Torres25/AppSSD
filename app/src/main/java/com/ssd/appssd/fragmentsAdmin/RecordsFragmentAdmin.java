@@ -121,13 +121,10 @@ public class RecordsFragmentAdmin extends Fragment {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
                                         User user = documentSnapshot.toObject(User.class);
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("correo", user.getCorreo());
-                                        map.put("nombre", user.getNombre());
-                                        map.put("fecha", Timestamp.now());
+                                        Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
                                         mStore.collection("Registros")
                                                 .document()
-                                                .set(map);
+                                                .set(tabla);
                                     }else{
                                         mStore.collection("Administrador")
                                                 .document(correo)
@@ -137,13 +134,10 @@ public class RecordsFragmentAdmin extends Fragment {
                                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                         if(documentSnapshot.exists()){
                                                             User user = documentSnapshot.toObject(User.class);
-                                                            Map<String, Object> map = new HashMap<>();
-                                                            map.put("correo", user.getCorreo());
-                                                            map.put("nombre", user.getNombre());
-                                                            map.put("fecha", Timestamp.now());
+                                                            Tabla tabla = new Tabla(user.getNombre(), user.getCorreo(), Timestamp.now());
                                                             mStore.collection("Registros")
                                                                     .document()
-                                                                    .set(map);
+                                                                    .set(tabla);
                                                         }
                                                     }
                                                 });
