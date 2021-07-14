@@ -62,6 +62,7 @@ public class ListUsers extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
+
     private EditText nombre, correo;
     public ListUsers() {
         // Required empty public constructor

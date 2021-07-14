@@ -2,19 +2,63 @@ package com.ssd.appssd.fragmentsAdmin;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
+import com.ssd.appssd.adapter.ListAdapter;
+import com.ssd.appssd.adapter.TablaAdapter;
+import com.ssd.appssd.objects.Grupo;
+import com.ssd.appssd.objects.Tabla;
+import com.ssd.appssd.objects.User;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RecordsFragmentAdmin extends Fragment {
 
     public RecordsFragmentAdmin() {
         // Required empty public constructor
     }
+    RecyclerView recyclerView;
+    TablaAdapter tablaAdapter;
+    private FirebaseFirestore mStore;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private List<Tabla> mTabla;
+    private DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,6 +66,71 @@ public class RecordsFragmentAdmin extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_records_admin, container, false);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mTabla= new ArrayList<>();
+
+        readTable2();
+        readTable();
         return view;
+    }
+
+    private void readTable2(){
+        mStore.collection("Registros")
+                .orderBy("fecha", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable @org.jetbrains.annotations.Nullable QuerySnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+                        if(error != null){
+                            Log.w("TAG", "Listen failed.", error);
+                            return;
+                        }
+                        mTabla.clear();
+                        for(QueryDocumentSnapshot documentSnapshot : value){
+                            if(documentSnapshot.exists()){
+                                Tabla tabla = documentSnapshot.toObject(Tabla.class);
+                                mTabla.add(tabla);
+                            }
+                        }
+                        tablaAdapter = new TablaAdapter(getContext(), mTabla);
+                        recyclerView.setAdapter(tablaAdapter);
+                    }
+                });
+    }
+    private void readTable(){
+        databaseReference.child("registros").child("entradas").child("usuarios").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                DocumentReference grupoReference = mStore.collection("Registros").document();
+                String correo = snapshot.getValue(String.class);
+                if(!correo.equals("null")){
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("correo", correo);
+                    map.put("fecha", Timestamp.now());
+                    mStore.collection("Registros")
+                            .document(grupoReference.getId())
+                            .set(map)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 }

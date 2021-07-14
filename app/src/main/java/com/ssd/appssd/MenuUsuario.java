@@ -30,7 +30,7 @@ public class MenuUsuario extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         if(bottomNavigationView.getSelectedItemId() == R.id.registros) {
             bottomNavigationView.setSelectedItemId(R.id.registros);
-            showSelectedFragment(new RecordsFragmentAdmin());
+            showSelectedFragment(new RecordsFragment());
             getSupportActionBar().setTitle("Registros");
         }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
