@@ -44,7 +44,7 @@ public class TablaAdapter extends RecyclerView.Adapter<TablaAdapter.ViewHolder> 
         if(tabla_list != null && tabla_list.size() > 0){
             Tabla tabla = tabla_list.get(position);
             SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            holder.correo_item.setText(tabla.getCorreo());
+            holder.correo_item.setText(tabla.getNombre());
             holder.fecha_item.setText(sfd.format(new Date(tabla.getFecha().toDate().toString())));
         }else{
             return;

@@ -13,7 +13,7 @@
         <TableRow>
             <TextView
                 android:id="@+id/correo"
-                android:text="@string/correo_registro"
+                android:text="@string/nombre"
                 android:textSize="15dp"
                 android:gravity="center"
                 android:textStyle="bold"

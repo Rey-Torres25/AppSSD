@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -32,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.ssd.appssd.R;
 import com.ssd.appssd.adapter.TablaAdapter;
 import com.ssd.appssd.objects.Tabla;
+import com.ssd.appssd.objects.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -106,16 +108,27 @@ public class RecordsFragment extends Fragment {
                 correo = snapshot.getValue(String.class);
                 System.out.println("Joder = "+ correo);
                 if(!correo.equals("null")){
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("correo", correo);
-                    map.put("fecha", Timestamp.now());
-                    mStore.collection("Registros")
-                            .document()
-                            .set(map);
+                    mStore.collection("Usuarios")
+                            .document(correo)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        User user = documentSnapshot.toObject(User.class);
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("correo", user.getCorreo());
+                                        map.put("nombre", user.getNombre());
+                                        map.put("fecha", Timestamp.now());
+                                        mStore.collection("Registros")
+                                                .document()
+                                                .set(map);
+                                    }
+                                }
+                            });
                 }else{
                     System.out.println("no entra");
                 }
-
             }
 
             @Override

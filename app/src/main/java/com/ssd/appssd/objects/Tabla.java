@@ -3,10 +3,11 @@ package com.ssd.appssd.objects;
 import com.google.firebase.Timestamp;
 
 public class Tabla {
-    String correo;
+    String correo, nombre;
     Timestamp fecha;
 
-    public Tabla(String correo, Timestamp fecha){
+    public Tabla(String nombre, String correo, Timestamp fecha){
+        this.nombre = nombre;
         this.correo = correo;
         this.fecha = fecha;
     }
@@ -14,6 +15,14 @@ public class Tabla {
     public Tabla() {
 
     }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getCorreo() {
         return correo;
     }

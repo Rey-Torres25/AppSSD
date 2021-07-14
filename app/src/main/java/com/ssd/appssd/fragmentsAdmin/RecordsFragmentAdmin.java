@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -112,12 +113,24 @@ public class RecordsFragmentAdmin extends Fragment {
                 correo = snapshot.getValue(String.class);
                 System.out.println("Joder = "+ correo);
                 if(!correo.equals("null")){
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("correo", correo);
-                    map.put("fecha", Timestamp.now());
-                    mStore.collection("Registros")
-                            .document()
-                            .set(map);
+                    mStore.collection("Usuarios")
+                            .document(correo)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        User user = documentSnapshot.toObject(User.class);
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("correo", user.getCorreo());
+                                        map.put("nombre", user.getNombre());
+                                        map.put("fecha", Timestamp.now());
+                                        mStore.collection("Registros")
+                                                .document()
+                                                .set(map);
+                                    }
+                                }
+                            });
                 }else{
                     System.out.println("no entra");
                 }
